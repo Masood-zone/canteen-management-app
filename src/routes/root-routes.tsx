@@ -1,4 +1,6 @@
-import Layout from "../components/layout";
+import ErrorBoundary from "@/components/error/error-boundary.tsx";
+import Error from "@/components/error/error.tsx";
+import BaseLayout from "@/components/layout";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -9,12 +11,64 @@ const rootRoutes = createBrowserRouter(
   createRoutesFromElements(
     <>
       {/* Authentication */}
-      <Route path="/" element={<Layout />}>
+      <Route
+        path="/"
+        element={
+          <ErrorBoundary
+            fallback={({ error, reset }) => (
+              <Error error={error} reset={reset} />
+            )}
+          >
+            <BaseLayout />
+          </ErrorBoundary>
+        }
+      >
+        {/* Login */}
         <Route
           index
           lazy={async () => {
             const { default: Login } = await import("../pages/auth/login");
             return { Component: Login };
+          }}
+        />
+        {/* Forgot password */}
+        <Route
+          path="forgot-password"
+          lazy={async () => {
+            const { default: ForgotPassword } = await import(
+              "../pages/auth/forgot-password.tsx"
+            );
+            return { Component: ForgotPassword };
+          }}
+        />
+        {/* Reset Password*/}
+        <Route
+          path="reset-password"
+          lazy={async () => {
+            const { default: ResetPassword } = await import(
+              "../pages/auth/reset-password.tsx"
+            );
+            return { Component: ResetPassword };
+          }}
+        />
+        {/* Contact Us */}
+        <Route
+          path="contact-us"
+          lazy={async () => {
+            const { default: ContactUs } = await import(
+              "../pages/auth/help/contact-us.tsx"
+            );
+            return { Component: ContactUs };
+          }}
+        />
+        {/* Terms and Conditions */}
+        <Route
+          path="terms-and-conditions"
+          lazy={async () => {
+            const { default: TermsAndConditions } = await import(
+              "../pages/auth/help/terms-and-conditions.tsx"
+            );
+            return { Component: TermsAndConditions };
           }}
         />
       </Route>
