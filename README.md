@@ -125,7 +125,7 @@ Copy code
 
 This project is a **React** application powered by **TypeScript** and **Vite**, designed to provide a robust management system for school canteens. The app features an **Admin Dashboard**, **Teacher Dashboard**, and **Authentication** functionalities.
 
-## **Tech Stack**
+# **Tech Stack**
 - **Frontend**: React, TypeScript, TailwindCSS, Shadcn/UI
 - **State Management**: Zustand, Redux Query
 - **Routing**: React Router
@@ -133,7 +133,7 @@ This project is a **React** application powered by **TypeScript** and **Vite**, 
 
 ---
 
-## **Features Overview**
+# **Features Overview**
 
 ### **Authentication**
 - Responsive Navbar for authentication-related pages.
