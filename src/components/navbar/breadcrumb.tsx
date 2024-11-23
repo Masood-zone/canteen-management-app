@@ -14,7 +14,7 @@ export const Breadcrumbs = () => {
   const breadcrumbItems = useMemo(() => {
     const paths = pathname.split("/").filter(Boolean);
     return [
-      { name: "Dashboard", href: "/" },
+      { name: "Dashboard", href: "#" },
       ...paths.slice(1).map((p, idx) => ({
         name: p.charAt(0).toUpperCase() + p.slice(1),
         href: "/" + paths.slice(0, idx + 2).join("/"),
