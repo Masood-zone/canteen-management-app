@@ -33,3 +33,33 @@ type Student = {
   class: string;
   student_status: string;
 };
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  profileUrl: string;
+  class?: {
+    id: string;
+    name: string;
+  };
+  password?: string;
+}
+
+export type CanteenRecord = {
+  id: string;
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  teacher: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  date: Timestamp;
+  amount: number;
+};

@@ -5,26 +5,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { studentsList } from "@/utils/mock";
-import { useParams } from "react-router-dom";
-import EditStudentForm from "./edit-student-form";
+import CreateCanteenForm from "./create-canteen-form";
+import { PageHeading } from "@/components/typography/heading";
 
-export default function EditStudent() {
-  const { id } = useParams();
-  const studentData = studentsList.find((student) => student.id === Number(id));
+export default function RecordCanteen() {
   return (
     <section className="w-full">
       <Card className="w-full bg-transparent border-none shadow-none">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Edit Student</h1>
+            <PageHeading>Record Canteen Transaction</PageHeading>
             <GoBackButton />
           </CardTitle>
           <CardDescription>
-            Fill in the details below to edit a student.
+            <p>
+              Record a new canteen transaction. You can add students, teachers
+              to the transaction once it is recorded.
+            </p>
           </CardDescription>
         </CardHeader>
-        <EditStudentForm studentData={studentData} />
+        <CreateCanteenForm />
       </Card>
     </section>
   );

@@ -24,10 +24,12 @@ const ActionMenu = ({
   id,
   resourceName,
   onDelete,
+  hasEdit = true,
 }: {
   id: string | number;
   resourceName: string;
   onDelete: (id: string | number) => void;
+  hasEdit?: boolean;
 }) => {
   return (
     <DropdownMenu>
@@ -43,9 +45,11 @@ const ActionMenu = ({
         <DropdownMenuItem>
           <Link to={`${id}`}>View {resourceName}</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link to={`${id}/edit`}>Edit {resourceName}</Link>
-        </DropdownMenuItem>
+        {hasEdit && (
+          <DropdownMenuItem>
+            <Link to={`${id}/edit`}>Edit {resourceName}</Link>
+          </DropdownMenuItem>
+        )}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem

@@ -1,5 +1,9 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 
-export default function Canteen() {
-  return <div>Canteen</div>;
+export default function CanteenLayout() {
+  return (
+    <>
+      <Outlet />
+    </>
+  );
 }

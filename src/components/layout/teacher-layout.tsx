@@ -10,7 +10,7 @@ export default function TeacherLayout() {
       <TeacherSidebar />
       <SidebarInset>
         <Navbar />
-        <main>
+        <main className="p-5">
           <Outlet />
         </main>
         <Toaster />
