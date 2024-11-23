@@ -1,0 +1,292 @@
+[
+  {
+    "payment_id": "1",
+    "teacher": {
+      "teacher_id": "T001",
+      "teacher_name": "Alice Johnson"
+    },
+    "date": "2024-11-04 08:30",
+    "students": [
+      {
+        "student_id": "S001",
+        "first_name": "John",
+        "last_name": "Doe",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      },
+      {
+        "student_id": "S002",
+        "first_name": "Jane",
+        "last_name": "Smith",
+        "payments": {
+          "amount_paid": "4.75",
+          "amount_remaining": "0.25"
+        }
+      }
+    ],
+    "total": "9.75"
+  },
+  {
+    "payment_id": "2",
+    "teacher": {
+      "teacher_id": "T002",
+      "teacher_name": "Bob Williams"
+    },
+    "date": "2024-11-05 09:00",
+    "students": [
+      {
+        "student_id": "S003",
+        "first_name": "Michael",
+        "last_name": "Brown",
+        "payments": {
+          "amount_paid": "3.50",
+          "amount_remaining": "1.50"
+        }
+      },
+      {
+        "student_id": "S004",
+        "first_name": "Emily",
+        "last_name": "Davis",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      }
+    ],
+    "total": "8.50"
+  },
+  {
+    "payment_id": "3",
+    "teacher": {
+      "teacher_id": "T003",
+      "teacher_name": "Charlie Green"
+    },
+    "date": "2024-11-06 08:45",
+    "students": [
+      {
+        "student_id": "S005",
+        "first_name": "Liam",
+        "last_name": "Wilson",
+        "payments": {
+          "amount_paid": "2.75",
+          "amount_remaining": "2.25"
+        }
+      },
+      {
+        "student_id": "S006",
+        "first_name": "Sophia",
+        "last_name": "Taylor",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      }
+    ],
+    "total": "7.75"
+  },
+  {
+    "payment_id": "4",
+    "teacher": {
+      "teacher_id": "T004",
+      "teacher_name": "Diana Clark"
+    },
+    "date": "2024-11-07 09:15",
+    "students": [
+      {
+        "student_id": "S007",
+        "first_name": "Lucas",
+        "last_name": "Martinez",
+        "payments": {
+          "amount_paid": "4.50",
+          "amount_remaining": "0.50"
+        }
+      },
+      {
+        "student_id": "S008",
+        "first_name": "Ella",
+        "last_name": "Garcia",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      }
+    ],
+    "total": "9.50"
+  },
+  {
+    "payment_id": "5",
+    "teacher": {
+      "teacher_id": "T005",
+      "teacher_name": "Ethan Roberts"
+    },
+    "date": "2024-11-08 08:20",
+    "students": [
+      {
+        "student_id": "S009",
+        "first_name": "Olivia",
+        "last_name": "Anderson",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      },
+      {
+        "student_id": "S010",
+        "first_name": "Noah",
+        "last_name": "Thomas",
+        "payments": {
+          "amount_paid": "2.00",
+          "amount_remaining": "3.00"
+        }
+      }
+    ],
+    "total": "7.00"
+  },
+  {
+    "payment_id": "6",
+    "teacher": {
+      "teacher_id": "T001",
+      "teacher_name": "Alice Johnson"
+    },
+    "date": "2024-11-09 08:55",
+    "students": [
+      {
+        "student_id": "S011",
+        "first_name": "Isabella",
+        "last_name": "Jackson",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      },
+      {
+        "student_id": "S012",
+        "first_name": "James",
+        "last_name": "White",
+        "payments": {
+          "amount_paid": "4.25",
+          "amount_remaining": "0.75"
+        }
+      }
+    ],
+    "total": "9.25"
+  },
+  {
+    "payment_id": "7",
+    "teacher": {
+      "teacher_id": "T002",
+      "teacher_name": "Bob Williams"
+    },
+    "date": "2024-11-10 09:05",
+    "students": [
+      {
+        "student_id": "S013",
+        "first_name": "Mia",
+        "last_name": "Harris",
+        "payments": {
+          "amount_paid": "1.50",
+          "amount_remaining": "3.50"
+        }
+      },
+      {
+        "student_id": "S014",
+        "first_name": "Alexander",
+        "last_name": "Martin",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      }
+    ],
+    "total": "6.50"
+  },
+  {
+    "payment_id": "8",
+    "teacher": {
+      "teacher_id": "T003",
+      "teacher_name": "Charlie Green"
+    },
+    "date": "2024-11-10 08:40",
+    "students": [
+      {
+        "student_id": "S015",
+        "first_name": "Ava",
+        "last_name": "Clark",
+        "payments": {
+          "amount_paid": "3.00",
+          "amount_remaining": "2.00"
+        }
+      },
+      {
+        "student_id": "S016",
+        "first_name": "William",
+        "last_name": "Rodriguez",
+        "payments": {
+          "amount_paid": "4.75",
+          "amount_remaining": "0.25"
+        }
+      }
+    ],
+    "total": "7.75"
+  },
+  {
+    "payment_id": "9",
+    "teacher": {
+      "teacher_id": "T004",
+      "teacher_name": "Diana Clark"
+    },
+    "date": "2024-11-11 08:50",
+    "students": [
+      {
+        "student_id": "S017",
+        "first_name": "Sophia",
+        "last_name": "Lee",
+        "payments": {
+          "amount_paid": "4.25",
+          "amount_remaining": "0.75"
+        }
+      },
+      {
+        "student_id": "S018",
+        "first_name": "Benjamin",
+        "last_name": "Walker",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      }
+    ],
+    "total": "9.25"
+  },
+  {
+    "payment_id": "10",
+    "teacher": {
+      "teacher_id": "T005",
+      "teacher_name": "Ethan Roberts"
+    },
+    "date": "2024-11-11 09:10",
+    "students": [
+      {
+        "student_id": "S019",
+        "first_name": "Emma",
+        "last_name": "Hall",
+        "payments": {
+          "amount_paid": "3.75",
+          "amount_remaining": "1.25"
+        }
+      },
+      {
+        "student_id": "S020",
+        "first_name": "Henry",
+        "last_name": "Young",
+        "payments": {
+          "amount_paid": "5.00",
+          "amount_remaining": "0.00"
+        }
+      }
+    ],
+    "total": "8.75"
+  }
+]
