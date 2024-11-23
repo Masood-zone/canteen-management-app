@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "../ui/button";
 
 export function Header({
@@ -15,4 +16,8 @@ export function Header({
       <Button onClick={buttonAction}>{buttonText}</Button>
     </div>
   );
+}
+
+export function PageHeading({ children }: { children: React.ReactNode }) {
+  return <h1 className="text-4xl font-semibold">{children}</h1>;
 }

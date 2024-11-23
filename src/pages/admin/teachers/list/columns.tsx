@@ -1,27 +1,8 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import ActionMenu from "@/components/actions/action-menu";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Link } from "react-router-dom";
-
+import { ArrowUpDown } from "lucide-react";
 export const columns: ColumnDef<Teacher>[] = [
   {
     id: "select",
@@ -103,62 +84,11 @@ export const columns: ColumnDef<Teacher>[] = [
     cell: ({ row }) => {
       const teacher = row.original;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuItem
-              onClick={() => console.log("View user", teacher.teacher_id)}
-            >
-              <Link to={`${teacher.teacher_id}`}>View Teacher</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => console.log("Edit user", teacher.teacher_id)}
-            >
-              <Link to={`${teacher.teacher_id}/edit`}>Edit user</Link>
-            </DropdownMenuItem>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <DropdownMenuItem
-                  className="bg-red-500 hover:bg-red-600 text-white"
-                  onSelect={(e) => e.preventDefault()}
-                >
-                  Delete user
-                </DropdownMenuItem>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription className="text-base">
-                    This action cannot be undone. This will permanently delete
-                    the user data for{" "}
-                    <span className="font-bold text-black">
-                      {teacher.first_name} {teacher.last_name}
-                    </span>{" "}
-                    and remove their data.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() =>
-                      console.log("Delete user", teacher.teacher_id)
-                    }
-                    className="bg-red-500 hover:bg-red-600"
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ActionMenu
+          id={teacher.teacher_id}
+          resourceName="Teacher"
+          onDelete={() => console.log("Delete" + teacher.teacher_id)}
+        />
       );
     },
   },
