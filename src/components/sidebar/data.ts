@@ -99,22 +99,22 @@ export const teacher_nav = {
       items: [
         {
           title: "Daily Payments",
-          url: "/teachers/accounting/daily-payments",
+          url: "/teacher/accounting/daily-payments",
         },
         {
           title: "Payment History",
-          url: "/teachers/accounting/payment-history",
+          url: "/teacher/accounting/payment-history",
         },
       ],
     },
     {
       title: "Settings",
-      url: "/teachers/settings",
+      url: "/teacher/settings",
       icon: Settings2,
       items: [
         {
           title: "General",
-          url: "/teachers/settings",
+          url: "/teacher/settings",
         },
         {
           title: "Notifications",
