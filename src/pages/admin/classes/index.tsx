@@ -1,5 +1,9 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 
-export default function Classes() {
-  return <div>Classes</div>;
+export default function ClassesLayout() {
+  return (
+    <section className="p-5">
+      <Outlet />
+    </section>
+  );
 }

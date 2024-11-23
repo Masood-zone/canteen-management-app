@@ -1,5 +1,9 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 
 export default function ManageStudents() {
-  return <div>ManageStudents</div>;
+  return (
+    <section className="p-5">
+      <Outlet />
+    </section>
+  );
 }
