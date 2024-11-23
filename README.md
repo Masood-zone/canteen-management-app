@@ -1,50 +1,218 @@
-# React + TypeScript + Vite
+# **Canteen Management App**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a **React** application powered by **TypeScript** and **Vite**, designed to provide a robust management system for school canteens. The app features an **Admin Dashboard**, **Teacher Dashboard**, and **Authentication** functionalities.
 
-Currently, two official plugins are available:
+## **Tech Stack**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend**: React, TypeScript, TailwindCSS, Shadcn/UI
+- **State Management**: Zustand, Redux Query
+- **Routing**: React Router
+- **Build Tool**: Vite
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## **Features Overview**
 
-- Configure the top-level `parserOptions` property like this:
+### **Authentication**
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Responsive Navbar for authentication-related pages.
+- Features include:
+  - **Login**
+  - **Forgot Password**
+  - **Reset Password**
+  - **Contact Us**
+  - **Terms and Conditions**
+- Route protection for authenticated users based on roles.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### **Admin Dashboard**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- Responsive sidebar with route outlets.
+- CRUD operations for:
+  - **Users**: Teachers are categorized under Users.
+  - **Students** and **Classes**: Assign students to classes and classes to teachers.
+  - **Canteen Records**: Manage records for meal payments and dues.
+- **Table Component** with:
+  - Search functionality
+  - Header filters
+  - Pagination
+- Modal dialogs for delete actions.
+- View, edit, and delete capabilities for all records.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### **Teacher Dashboard**
+
+- Navbar displaying the **current date, time, and day**.
+- Create **canteen records** for assigned classes:
+  - Only show **unpaid students** while creating records.
+- Manage and review records before submission to the admin.
+- **Table Component** for displaying canteen records.
+
+---
+
+## **Second Week Features (Analytics)**
+
+### **Admin Analytics**
+
+- Dashboard showing:
+  - Overview of **students, classes, teachers**, and approved canteen records.
+  - Charts depicting:
+    - Total payments during the week.
+    - Monthly and yearly payment trends.
+- Comprehensive records view:
+  - Payments by teachers during the week and day.
+  - Every submitted and approved canteen record.
+
+### **Teacher Analytics**
+
+- Dashboard showing:
+  - Total students.
+  - Students who have paid or not during the day.
+  - Canteen record status for the day.
+  - Payment trends for students during the week.
+
+---
+
+## **Folder Structure**
+
+The project uses a modular folder structure to maintain scalability and readability:
+
+src/
+├── components/ // Shared reusable components
+├── layouts/ // Dashboard and authentication layouts
+├── pages/ // React Router pages
+├── routes/ // Application routes
+├── store/ // Zustand and Redux Query configurations
+├── services/ // API handlers using Redux Query
+├── utils/ // Helper functions and utilities
+├── App.js // Main app entry
+├── index.js // React DOM rendering
+└── styles/ // TailwindCSS configuration
+
+---
+
+## **Development Setup**
+
+### **Prerequisites**
+
+- Node.js v16+ and npm v7+
+- Code editor (e.g., VSCode)
+
+### **Install Dependencies**
+
+Clone the repository and install dependencies:
+
+````bash
+npm install
+
+### **Run the Application**
+Start the development server:
+
+```bash
+npm run dev
+
+### **Build for Production**
+Create a production build:
+
+```bash
+Copy code
+npm run build
+
+
+Below is the content in Markdown (.md or .mdx) format, ready to be used as your README.md file:
+
+mdx
+Copy code
+# **Canteen Management App**
+
+This project is a **React** application powered by **TypeScript** and **Vite**, designed to provide a robust management system for school canteens. The app features an **Admin Dashboard**, **Teacher Dashboard**, and **Authentication** functionalities.
+
+## **Tech Stack**
+- **Frontend**: React, TypeScript, TailwindCSS, Shadcn/UI
+- **State Management**: Zustand, Redux Query
+- **Routing**: React Router
+- **Build Tool**: Vite
+
+---
+
+## **Features Overview**
+
+### **Authentication**
+- Responsive Navbar for authentication-related pages.
+- Features include:
+  - **Login**
+  - **Forgot Password**
+  - **Reset Password**
+  - **Contact Us**
+  - **Terms and Conditions**
+- Route protection for authenticated users based on roles.
+
+### **Admin Dashboard**
+- Responsive sidebar with route outlets.
+- CRUD operations for:
+  - **Users**: Teachers are categorized under Users.
+  - **Students** and **Classes**: Assign students to classes and classes to teachers.
+  - **Canteen Records**: Manage records for meal payments and dues.
+- **Table Component** with:
+  - Search functionality
+  - Header filters
+  - Pagination
+- Modal dialogs for delete actions.
+- View, edit, and delete capabilities for all records.
+
+### **Teacher Dashboard**
+- Navbar displaying the **current date, time, and day**.
+- Create **canteen records** for assigned classes:
+  - Only show **unpaid students** while creating records.
+- Manage and review records before submission to the admin.
+- **Table Component** for displaying canteen records.
+
+---
+
+## **Second Week Features (Analytics)**
+
+### **Admin Analytics**
+- Dashboard showing:
+  - Overview of **students, classes, teachers**, and approved canteen records.
+  - Charts depicting:
+    - Total payments during the week.
+    - Monthly and yearly payment trends.
+- Comprehensive records view:
+  - Payments by teachers during the week and day.
+  - Every submitted and approved canteen record.
+
+### **Teacher Analytics**
+- Dashboard showing:
+  - Total students.
+  - Students who have paid or not during the day.
+  - Canteen record status for the day.
+  - Payment trends for students during the week.
+
+---
+
+## **Folder Structure**
+
+The project uses a modular folder structure to maintain scalability and readability:
+
+src/ ├── components/ // Shared reusable components ├── layouts/ // Dashboard and authentication layouts ├── pages/ // React Router pages ├── routes/ // Application routes ├── store/ // Zustand and Redux Query configurations ├── services/ // API handlers using Redux Query ├── utils/ // Helper functions and utilities ├── App.js // Main app entry ├── index.js // React DOM rendering └── styles/ // TailwindCSS configuration
+
+yaml
+Copy code
+
+---
+
+## Development Setup
+
+### **Prerequisites**
+- Node.js v16+ and npm v7+
+- Code editor (e.g., VSCode)
+
+### **Install Dependencies**
+Clone the repository and install dependencies:
+```bash
+npm install
+
+### How to Use
+
+- Save this content in your `README.md` file at the root of your project directory.
+- Customize sections like **Contributing**, **License**, or any additional details specific to your project.
+- Optionally, add screenshots, logos, or badges at the top of the file for a professional look. Let me know if you’d like help with this!
+````
