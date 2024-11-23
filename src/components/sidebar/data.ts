@@ -69,3 +69,58 @@ export const super_nav = {
     },
   ],
 };
+
+export const teacher_nav = {
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "#",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Home",
+          url: "/teacher",
+        },
+        {
+          title: "Canteen",
+          url: "/teacher/canteen",
+        },
+        {
+          title: "Students",
+          url: "/teacher/students",
+        },
+      ],
+    },
+    {
+      title: "Accounting",
+      url: "/teacher",
+      icon: BookOpen,
+      items: [
+        {
+          title: "Daily Payments",
+          url: "/teachers/accounting/daily-payments",
+        },
+        {
+          title: "Payment History",
+          url: "/teachers/accounting/payment-history",
+        },
+      ],
+    },
+    {
+      title: "Settings",
+      url: "/teachers/settings",
+      icon: Settings2,
+      items: [
+        {
+          title: "General",
+          url: "/teachers/settings",
+        },
+        {
+          title: "Notifications",
+          url: "#",
+        },
+      ],
+    },
+  ],
+};
