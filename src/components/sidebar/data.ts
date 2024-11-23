@@ -44,7 +44,7 @@ export const super_nav = {
         },
         {
           title: "Payment History",
-          url: "/accounting/payment-history",
+          url: "/admin/payment-history",
         },
       ],
     },

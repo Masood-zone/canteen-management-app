@@ -1,16 +1,18 @@
 import ErrorBoundary from "@/components/error/error-boundary.tsx";
 import Error from "@/components/error/error.tsx";
 import BaseLayout from "@/components/layout";
+import AdminLayout from "@/components/layout/admin-layout.tsx";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
+import TeacherLayout from "../components/layout/teacher-layout";
 
 const rootRoutes = createBrowserRouter(
   createRoutesFromElements(
     <>
-      {/* Authentication */}
+      {/* Base Layout */}
       <Route
         path="/"
         element={
@@ -71,17 +73,29 @@ const rootRoutes = createBrowserRouter(
             return { Component: TermsAndConditions };
           }}
         />
+        <Route
+          path="*"
+          lazy={async () => {
+            const { default: NotFound } = await import(
+              "../pages/not-found/not-found.tsx"
+            );
+            return { Component: NotFound };
+          }}
+        />
       </Route>
 
       {/* Admin Dashboard */}
       <Route
         path="admin"
-        lazy={async () => {
-          const { default: AdminLayout } = await import(
-            "../components/layout/admin-layout"
-          );
-          return { Component: AdminLayout };
-        }}
+        element={
+          <ErrorBoundary
+            fallback={({ error, reset }) => (
+              <Error error={error} reset={reset} />
+            )}
+          >
+            <AdminLayout />
+          </ErrorBoundary>
+        }
       >
         <Route
           index
@@ -124,17 +138,30 @@ const rootRoutes = createBrowserRouter(
             return { Component: CanteenRecords };
           }}
         />
+        {/* Not found */}
+        <Route
+          path="*"
+          lazy={async () => {
+            const { default: NotFound } = await import(
+              "../pages/not-found/not-found.tsx"
+            );
+            return { Component: NotFound };
+          }}
+        />
       </Route>
 
       {/* Teacher Dashboard */}
       <Route
         path="teacher"
-        lazy={async () => {
-          const { default: TeacherLayout } = await import(
-            "../components/layout/teacher-layout"
-          );
-          return { Component: TeacherLayout };
-        }}
+        element={
+          <ErrorBoundary
+            fallback={({ error, reset }) => (
+              <Error error={error} reset={reset} />
+            )}
+          >
+            <TeacherLayout />
+          </ErrorBoundary>
+        }
       >
         <Route
           index
@@ -161,6 +188,15 @@ const rootRoutes = createBrowserRouter(
               "../pages/teacher/students"
             );
             return { Component: ManageStudents };
+          }}
+        />
+        <Route
+          path="*"
+          lazy={async () => {
+            const { default: NotFound } = await import(
+              "../pages/not-found/not-found.tsx"
+            );
+            return { Component: NotFound };
           }}
         />
       </Route>
