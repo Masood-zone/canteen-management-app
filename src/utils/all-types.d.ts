@@ -27,7 +27,7 @@ type Class = {
 };
 
 type Student = {
-  id: string;
+  id: string | number;
   first_name: string;
   last_name: string;
   class: string;
