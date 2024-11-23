@@ -14,7 +14,7 @@ export const super_nav = {
         },
         {
           title: "Teachers",
-          url: "/teachers",
+          url: "/admin/teachers",
         },
       ],
     },
