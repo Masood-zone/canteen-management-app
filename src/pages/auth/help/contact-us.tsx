@@ -77,10 +77,13 @@ export default function ContactUs() {
           </CardContent>
           <CardFooter>
             <div className="space-x-4 text-center text-gray-500">
-              <Link to="/help/contact" className="text-sm hover:text-primary">
+              <Link to="/contact-us" className="text-sm hover:text-primary">
                 <span>&copy;CMS</span> Contact
               </Link>
-              <Link to="/help/terms" className="text-sm hover:text-primary">
+              <Link
+                to="/terms-and-conditions"
+                className="text-sm hover:text-primary"
+              >
                 Terms & Conditions
               </Link>
             </div>
