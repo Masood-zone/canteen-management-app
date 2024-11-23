@@ -1,6 +1,6 @@
 import { Header } from "@/components/typography/heading";
-import React from "react";
 import { useNavigate } from "react-router-dom";
+import ClassesTable from "./list/table";
 
 export default function Classes() {
   const navigate = useNavigate();
@@ -14,6 +14,7 @@ export default function Classes() {
         buttonAction={() => navigate("/admin/classes/add")}
       />
       {/* Table */}
+      <ClassesTable />
     </section>
   );
 }

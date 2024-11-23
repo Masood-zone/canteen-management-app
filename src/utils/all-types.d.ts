@@ -21,7 +21,7 @@ type Teacher = {
 };
 
 type Class = {
-  class_id: string;
+  class_id: string | number;
   class_name: string;
   class_teacher: string;
 };
