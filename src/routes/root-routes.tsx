@@ -307,12 +307,12 @@ const rootRoutes = createBrowserRouter(
             }}
           />
           <Route
-            path="add"
+            path="submit"
             lazy={async () => {
-              const { default: RecordCanteen } = await import(
-                "@/pages/teacher/canteen/add/record-canteen.tsx"
+              const { default: SubmitCanteenRecords } = await import(
+                "@/pages/teacher/canteen/submit/record-canteen.tsx"
               );
-              return { Component: RecordCanteen };
+              return { Component: SubmitCanteenRecords };
             }}
           />
           <Route

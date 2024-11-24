@@ -1,9 +1,13 @@
-import ActionMenu from "@/components/actions/action-menu";
-import { CanteenRecord } from "@/utils/all-types";
-import { ColumnDef } from "@tanstack/react-table";
-import moment from "moment";
+"use client";
 
-export const columns: ColumnDef<CanteenRecord>[] = [
+import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+
+export const columns = (
+  onPaymentStatusChange: (id: string, isPaid: boolean) => void,
+  onAbsentStatusChange: (id: string, isAbsent: boolean) => void
+): ColumnDef<CanteenRecord>[] => [
   {
     accessorKey: "student",
     header: "Student",
@@ -11,34 +15,46 @@ export const columns: ColumnDef<CanteenRecord>[] = [
       `${row.original.student.firstName} ${row.original.student.lastName}`,
   },
   {
-    accessorKey: "teacher.name",
+    accessorKey: "teacher",
     header: "Teacher",
+    cell: ({ row }) =>
+      `${row.original.teacher.firstName} ${row.original.teacher.lastName}`,
   },
   {
     accessorKey: "date",
     header: "Date",
-    cell: ({ row }) => {
-      const date = row.original.date;
-      const formattedDate = moment(date).format("LLL");
-      return formattedDate;
-    },
+    cell: ({ row }) => format(new Date(row.original.date), "PPP"),
   },
   {
     accessorKey: "amount",
     header: "Amount",
+    cell: () => "Ghc5.00",
   },
   {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const id = row.original.id;
+      const isPaid = row.original.paid;
+      const isAbsent = row.original.absent;
       return (
-        <ActionMenu
-          id={id}
-          onDelete={() => console.log("Delete", id)}
-          resourceName="canteen record"
-          hasEdit={false}
-        />
+        <div className="flex space-x-2">
+          {!isAbsent && (
+            <Button
+              variant={isPaid ? "destructive" : "default"}
+              onClick={() => onPaymentStatusChange(row.original.id, !isPaid)}
+            >
+              {isPaid ? "Mark as Unpaid" : "Mark as Paid"}
+            </Button>
+          )}
+          {!isPaid && (
+            <Button
+              variant={isAbsent ? "destructive" : "outline"}
+              onClick={() => onAbsentStatusChange(row.original.id, !isAbsent)}
+            >
+              {isAbsent ? "Mark as Present" : "Mark as Absent"}
+            </Button>
+          )}
+        </div>
       );
     },
   },

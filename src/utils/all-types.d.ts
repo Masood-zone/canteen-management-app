@@ -48,7 +48,7 @@ interface User {
   password?: string;
 }
 
-export type CanteenRecord = {
+type CanteenRecord = {
   id: string;
   student: {
     id: string;
@@ -60,6 +60,8 @@ export type CanteenRecord = {
     firstName: string;
     lastName: string;
   };
-  date: Timestamp;
+  date: Date;
   amount: number;
+  paid: boolean;
+  absent: boolean;
 };

@@ -1,8 +1,22 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import CanteenList from "./list/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useNavigate } from "react-router-dom";
 
 export default function Canteen() {
+  const navigate = useNavigate();
   const currentUser = {
     id: "90",
     firstName: "John",
@@ -17,11 +31,11 @@ export default function Canteen() {
   };
 
   return (
-    <section className="">
+    <section className="container mx-auto py-10">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         {/* Teacher info with assigned class */}
-        <div className="">
+        <div>
           <h1 className="text-2xl font-bold">
             Hello, {currentUser?.firstName} {currentUser?.lastName}
           </h1>
@@ -32,12 +46,32 @@ export default function Canteen() {
         </div>
         {/* Record canteen button */}
         <div>
-          <Link to="/teacher/canteen/add">
-            <Button>Record canteen</Button>
-          </Link>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button>Submit canteen records</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will submit the canteen
+                  records for {currentUser?.class?.name} to the admin for
+                  approval.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => navigate("/teacher/canteen/submit")}
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
-      {/* Canteen table */}
+      {/* Canteen tables */}
       <CanteenList />
     </section>
   );
