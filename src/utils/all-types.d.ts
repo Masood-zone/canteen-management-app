@@ -1,3 +1,4 @@
+// Test types
 interface LoginFormProps {
   email: string;
   password: string;
@@ -65,3 +66,20 @@ type CanteenRecord = {
   paid: boolean;
   absent: boolean;
 };
+
+// Real-time types
+interface User {
+  role: string;
+}
+interface AuthStore {
+  user: User | null | undefined;
+  isAuthenticated: boolean;
+  login: (user) => void;
+  isLoading?: boolean;
+  setLoading: () => void;
+  setLoaded: () => void;
+}
+interface ProtectedRouteProps {
+  children: ReactNode;
+  roles?: string[];
+}

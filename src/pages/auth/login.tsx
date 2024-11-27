@@ -9,55 +9,33 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useLogin } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export default function Login() {
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<LoginFormProps>();
+  const { mutate: login, isLoading } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
-  const [state, setState] = useState({
-    success: false,
-    message: "",
-  });
-  const [isPending, setIsPending] = useState(false);
-
   const onSubmit: SubmitHandler<LoginFormProps> = async (data) => {
-    setIsPending(true);
     try {
-      // Call your API here
-      console.log(data);
-      setState({
-        success: true,
-        message: "Login successful",
-      });
+      login(data);
     } catch (error) {
       console.error(error);
-      setState({
-        success: false,
-        message: "Invalid credentials",
-      });
+      toast("There was an error!");
     } finally {
-      setIsPending(false);
       reset();
-      navigate("/admin");
     }
   };
-
-  useEffect(() => {
-    if (state.success) {
-      toast(state.message);
-    }
-  }, [state.success, state.message]);
 
   return (
     <section className="w-full">
@@ -145,18 +123,9 @@ export default function Login() {
                   </span>
                 </div>
               </div>
-              {!state.success && state.message && (
-                <div className="text-red-500 text-sm py-3">{state.message}</div>
-              )}
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? (
-                  <span className="flex items-center space-x-2">
-                    <Loader2 className="animate-spin text-white" size={24} />
-                    Loading...
-                  </span>
-                ) : (
-                  "Log in"
-                )}
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                Log in
               </Button>
             </CardContent>
             <CardFooter>

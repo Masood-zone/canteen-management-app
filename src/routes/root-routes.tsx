@@ -8,6 +8,7 @@ import {
   Route,
 } from "react-router-dom";
 import TeacherLayout from "@/components/layout/teacher-layout";
+import ProtectedRoute from "./protected-routes.tsx";
 
 const rootRoutes = createBrowserRouter(
   createRoutesFromElements(
@@ -88,13 +89,15 @@ const rootRoutes = createBrowserRouter(
       <Route
         path="admin"
         element={
-          <ErrorBoundary
-            fallback={({ error, reset }) => (
-              <Error error={error} reset={reset} />
-            )}
-          >
-            <AdminLayout />
-          </ErrorBoundary>
+          <ProtectedRoute roles={["SUPER_ADMIN"]}>
+            <ErrorBoundary
+              fallback={({ error, reset }) => (
+                <Error error={error} reset={reset} />
+              )}
+            >
+              <AdminLayout />
+            </ErrorBoundary>
+          </ProtectedRoute>
         }
       >
         <Route
@@ -270,13 +273,15 @@ const rootRoutes = createBrowserRouter(
       <Route
         path="teacher"
         element={
-          <ErrorBoundary
-            fallback={({ error, reset }) => (
-              <Error error={error} reset={reset} />
-            )}
-          >
-            <TeacherLayout />
-          </ErrorBoundary>
+          <ProtectedRoute roles={["TEACHER"]}>
+            <ErrorBoundary
+              fallback={({ error, reset }) => (
+                <Error error={error} reset={reset} />
+              )}
+            >
+              <TeacherLayout />
+            </ErrorBoundary>
+          </ProtectedRoute>
         }
       >
         <Route
