@@ -35,20 +35,6 @@ type Student = {
   student_status: string;
 };
 
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  profileUrl: string;
-  class?: {
-    id: string;
-    name: string;
-  };
-  password?: string;
-}
-
 type CanteenRecord = {
   id: string;
   student: {
@@ -76,14 +62,15 @@ interface User {
     name: string;
     phone: string;
     role: string;
+    avatar?: string;
   };
-  role: string;
 }
 interface AuthStore {
   user: User | null | undefined;
   token: token | string | null;
   isAuthenticated: boolean;
   login: (user) => void;
+  logout: () => void;
   isLoading?: boolean;
   setLoading: () => void;
   setLoaded: () => void;

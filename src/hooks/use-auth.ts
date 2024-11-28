@@ -23,3 +23,23 @@ export const useLogin = () => {
     },
   });
 };
+
+export const useLogout = () => {
+  const { logout, setLoading, setLoaded } = useAuthStore();
+  return useMutation(() => Promise.resolve(logout()), {
+    onMutate: () => setLoading(),
+    onSuccess: () => {
+      toast("Logged out successfully!");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast("Opps! Error", {
+        description: "There was error logging out!",
+      });
+    },
+    onSettled: () => {
+      // Do something after logout
+      setLoaded();
+    },
+  });
+};

@@ -22,16 +22,13 @@ import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import Logo from "../../assets/svgs/logo.svg";
 import { super_nav } from "./data";
-
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg",
-};
+import { useAuthStore } from "@/store/authStore";
 
 export function AdminSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore();
+  const mainUser = user?.user;
   const { state, isMobile } = useSidebar();
 
   return (
@@ -84,7 +81,9 @@ export function AdminSidebar({
         <NavMain items={super_nav.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        {mainUser && (
+          <NavUser user={{ ...mainUser, token: user.token, user: user.user }} />
+        )}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
