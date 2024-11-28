@@ -9,22 +9,38 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLogin } from "@/hooks/use-auth";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Login() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<LoginFormProps>();
-  const { mutate: login, isLoading } = useLogin();
+  const { user, isAuthenticated } = useAuthStore();
+  const { mutate: login, isSuccess, isLoading } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess && user) {
+      const { role } = user.user;
+      if (role === "SUPER_ADMIN") {
+        navigate("/admin");
+      } else if (role === "TEACHER") {
+        navigate("/teacher");
+      } else {
+        navigate("/"); // Default fallback
+      }
+    }
+  }, [isSuccess, user, navigate, isAuthenticated]);
 
   const onSubmit: SubmitHandler<LoginFormProps> = async (data) => {
     try {

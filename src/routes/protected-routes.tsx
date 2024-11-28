@@ -1,25 +1,24 @@
 import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const ProtectedRoute = ({ children, roles = [] }: ProtectedRouteProps) => {
+  const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore() as AuthStore;
+  const { role } = user?.user ?? { role: "" };
 
-  // Toast error if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
       toast.error("You need to be logged in to access this page.");
+    } else if (roles.length && role && !roles.includes(role)) {
+      toast.error("You do not have permission to access this page.");
+      navigate("/"); // Redirect unauthorized users
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate, user, roles, role]);
 
   // Redirect unauthenticated users
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
-
-  // Restrict access if the user's role doesn't match allowed roles
-  if (roles.length && user && !roles.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
 

@@ -69,10 +69,19 @@ type CanteenRecord = {
 
 // Real-time types
 interface User {
+  token: string;
+  user: {
+    id: number;
+    email: string;
+    name: string;
+    phone: string;
+    role: string;
+  };
   role: string;
 }
 interface AuthStore {
   user: User | null | undefined;
+  token: token | string | null;
   isAuthenticated: boolean;
   login: (user) => void;
   isLoading?: boolean;

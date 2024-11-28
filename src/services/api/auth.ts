@@ -7,7 +7,7 @@ const apiClient = axios.create({
   },
 });
 
-export const loginApi = async (data) => {
-  const response = await apiClient.post("/auth/login", data);
+export const loginApi = async (data: LoginFormProps) => {
+  const response = await apiClient.post("/login", data);
   return response.data;
 };
