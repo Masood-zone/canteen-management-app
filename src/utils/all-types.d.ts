@@ -13,28 +13,6 @@ interface ResetPasswordFormProps {
   confirmPassword: string;
 }
 
-type Teacher = {
-  teacher_id: number;
-  first_name: string;
-  last_name: string;
-  assigned_class: string;
-  teacher_status: string;
-};
-
-type Class = {
-  class_id: string | number;
-  class_name: string;
-  class_teacher: string;
-};
-
-type Student = {
-  id: string | number;
-  first_name: string;
-  last_name: string;
-  class: string;
-  student_status: string;
-};
-
 type CanteenRecord = {
   id: string;
   student: {
@@ -65,6 +43,39 @@ interface User {
     avatar?: string;
   };
 }
+
+type Student = {
+  id: string | number;
+  name: string;
+  parentPhone: string;
+  age: number;
+  classId: string | number;
+  gender: "male" | "female";
+};
+
+type Teacher = {
+  id: number;
+  name: string;
+  phone: string;
+  assigned_class?: {
+    id: number;
+    name: string;
+  };
+  email: string;
+  gender: "male" | "female";
+  password?: string;
+};
+
+type Class = {
+  id: number;
+  name: string;
+  description: string;
+  supervisorId: string | number;
+  class_teacher?: {
+    name: string;
+  };
+};
+
 interface AuthStore {
   user: User | null | undefined;
   token: token | string | null;

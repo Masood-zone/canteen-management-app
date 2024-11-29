@@ -1,9 +1,11 @@
 import { Header } from "@/components/typography/heading";
 import { useNavigate } from "react-router-dom";
 import ClassesTable from "./list/table";
+import { useFetchClasses } from "@/services/api/queries";
 
 export default function Classes() {
   const navigate = useNavigate();
+  const { data: classes, isLoading, error } = useFetchClasses();
 
   return (
     <section>
@@ -14,7 +16,7 @@ export default function Classes() {
         buttonAction={() => navigate("/admin/classes/add")}
       />
       {/* Table */}
-      <ClassesTable />
+      <ClassesTable data={classes || []} isLoading={isLoading} error={error} />
     </section>
   );
 }

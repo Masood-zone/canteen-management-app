@@ -1,9 +1,12 @@
 import { Header } from "@/components/typography/heading";
 import { useNavigate } from "react-router-dom";
 import TeachersTable from "./list/table";
+import { useFetchTeachers } from "@/services/api/queries";
 
 export default function Teachers() {
   const navigate = useNavigate();
+  const { data: teachers, isLoading, error } = useFetchTeachers();
+
   return (
     <section>
       {/* Header */}
@@ -13,7 +16,11 @@ export default function Teachers() {
         buttonAction={() => navigate("/admin/teachers/add")}
       />
       {/* Table */}
-      <TeachersTable />
+      <TeachersTable
+        data={teachers || []}
+        isLoading={isLoading}
+        error={error}
+      />
     </section>
   );
 }

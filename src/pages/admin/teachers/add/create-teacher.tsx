@@ -19,9 +19,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCreateTeacher } from "@/services/api/queries";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 export default function AddTeacher() {
+  const { mutate: createTeacher, isLoading } = useCreateTeacher();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm<Teacher>();
+  const gender = watch("gender");
+  const onSubmit = async (data: Teacher) => {
+    try {
+      await createTeacher(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <section className="w-full">
       <Card className="w-full bg-transparent border-none shadow-none">
@@ -34,86 +53,78 @@ export default function AddTeacher() {
             <p>Register a new teacher to the platform</p>
           </CardDescription>
         </CardHeader>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             {/* First Name */}
             <div className="space-y-2">
-              <Label htmlFor="first-name">First Name</Label>
+              <Label htmlFor="name">Name</Label>
               <Input
                 type="name"
-                name="first-name"
-                id="first-name"
+                id="name"
+                {...register("name", { required: true })}
                 autoComplete="off"
                 className="bg-transparent"
                 required
               />
-            </div>
-            {/* Last Name */}
-            <div className="space-y-2">
-              <Label htmlFor="last-name">Last Name</Label>
-              <Input
-                type="name"
-                name="last-name"
-                id="last-name"
-                autoComplete="off"
-                className="bg-transparent"
-                required
-              />
+              {errors.name && (
+                <p className="text-sm text-red-500">
+                  {errors.name?.message || "Name is required"}
+                </p>
+              )}
             </div>
             {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email">
-                Email <span className="text-gray-400">(Optional)</span>
-              </Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 type="email"
-                name="email"
                 id="email"
+                {...register("email", { required: true })}
                 autoComplete="off"
+                required
                 className="bg-transparent"
               />
+              {errors.email && (
+                <p className="text-sm text-red-500">
+                  {errors.email?.message || "Email is required"}
+                </p>
+              )}
             </div>
             {/* Telephone */}
             <div className="space-y-2">
-              <Label htmlFor="phone_number">Telephone</Label>
+              <Label htmlFor="phone">Phone Number</Label>
               <Input
                 type="text"
-                name="phone_number"
-                id="phone_number"
+                id="phone"
+                {...register("phone", { required: true })}
                 autoComplete="off"
                 className="bg-transparent"
                 required
               />
+              {errors.phone && (
+                <p className="text-sm text-red-500">
+                  {errors.phone?.message || "Phone number is required"}
+                </p>
+              )}
             </div>
             {/* Gender */}
             <div className="space-y-2">
               <Label className="block" htmlFor="gender">
                 Gender
               </Label>
-              <Select name="gender">
+              <Select
+                value={gender} // Bind `Select`'s value to `watch` output
+                onValueChange={(value) =>
+                  setValue("gender", value as "male" | "female", {
+                    shouldValidate: true,
+                  })
+                }
+              >
                 <SelectTrigger name="gender" className="bg-transparent">
                   <SelectValue placeholder="Gender" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="male">Male</SelectItem>
                   <SelectItem value="female">Female</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {/* Class */}
-            <div className="space-y-2">
-              <Label htmlFor="class">Class</Label>
-              <Select name="class">
-                <SelectTrigger name="class" className="bg-transparent">
-                  <SelectValue placeholder="Select Class" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="jss1">JSS 1</SelectItem>
-                  <SelectItem value="jss2">JSS 2</SelectItem>
-                  <SelectItem value="jss3">JSS 3</SelectItem>
-                  <SelectItem value="sss1">SSS 1</SelectItem>
-                  <SelectItem value="sss2">SSS 2</SelectItem>
-                  <SelectItem value="sss3">SSS 3</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -124,16 +135,31 @@ export default function AddTeacher() {
               </div>
               <Input
                 type="password"
-                name="password"
                 id="password"
+                {...register("password", {
+                  required: true,
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "Password must not exceed 20 characters",
+                  },
+                })}
                 autoComplete="off"
                 className="bg-transparent"
                 required
               />
+              {errors.password && (
+                <p className="text-sm text-red-500">
+                  {errors.password?.message || "Password is required"}
+                </p>
+              )}
             </div>
-            <Button type="submit" className="w-full " disabled={false}>
+            <Button type="submit" className="w-full " disabled={isLoading}>
               <ButtonLoader
-                isPending={false}
+                isPending={isLoading}
                 loadingText="Creating Teacher..."
                 fallback="Create Teacher"
               />

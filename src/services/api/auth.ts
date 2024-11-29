@@ -1,11 +1,4 @@
-import axios from "axios";
-
-const apiClient = axios.create({
-  baseURL: "http://localhost:3400",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import { apiClient } from "../root";
 
 export const loginApi = async (data: LoginFormProps) => {
   const response = await apiClient.post("/login", data);

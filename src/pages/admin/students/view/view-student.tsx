@@ -1,4 +1,5 @@
 import GoBackButton from "@/components/shared/go-back/go-back";
+import { PaleTableSkeleton } from "@/components/shared/page-loader/loaders";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -8,13 +9,20 @@ import {
   TableHead,
   TableRow,
 } from "@/components/ui/table";
-import { studentsList } from "@/utils/mock";
+import { useFetchClassById, useFetchStudent } from "@/services/api/queries";
 import { Edit2Icon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 export default function ViewStudent() {
   const { id } = useParams();
-  const student = studentsList.find((student) => student.id === Number(id));
+  const {
+    data: student,
+    isLoading,
+    error,
+  } = useFetchStudent(Number(id) as number);
+  const { data: classData, isLoading: classLoader } = useFetchClassById(
+    Number(id)
+  );
 
   return (
     <section className="w-full space-y-5">
@@ -25,12 +33,9 @@ export default function ViewStudent() {
         <div className="size-36 rounded-full  gap-3 bg-gray-200"></div>
         {/* Name and class */}
         <div className="flex flex-col w-2/3 space-y-2">
-          <h1 className="text-2xl font-bold">
-            {student?.first_name} {student?.first_name}
-          </h1>
+          <h1 className="text-2xl font-bold">{student?.name}</h1>
           <p>
-            {/* <span className="font-medium text-lg">{student.age}</span> */}
-            10 years old
+            <span className="font-medium text-lg">{student?.age}</span>
           </p>
           <div className="mt-2 flex items-center gap-2">
             <Link to={`/admin/students/${id}/edit`}>
@@ -43,36 +48,47 @@ export default function ViewStudent() {
         </div>
       </div>
       {/* List */}
-      <div className="max-w-4xl w-full">
-        <Table className="border rounded-lg w-full">
-          <TableCaption>
-            {student?.first_name} {student?.last_name} Info
-          </TableCaption>
-          <TableBody>
-            <TableRow>
-              <TableHead className="w-1/3 text-left">Full Name</TableHead>
-              <TableCell>
-                {student?.first_name}
-                {student?.last_name}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableHead className="w-1/3 text-left">Class/Level</TableHead>
-              <TableCell>{student?.class}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableHead className="w-1/3 text-left">Gender</TableHead>
-              <TableCell>Male</TableCell>
-              {/* <TableCell>{student.gender}</TableCell> */}
-            </TableRow>
-            <TableRow>
-              <TableHead className="w-1/3 text-left">Age</TableHead>
-              <TableCell>10 years old</TableCell>
-              {/* <TableCell>{student.age} years old</TableCell> */}
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+      {isLoading ? (
+        <PaleTableSkeleton />
+      ) : error ? (
+        <p>{error instanceof Error ? error.message : "An error occurred"}</p>
+      ) : (
+        <div className="max-w-4xl w-full">
+          <Table className="border rounded-lg w-full">
+            <TableCaption>{student?.name} Info</TableCaption>
+            <TableBody>
+              <TableRow>
+                <TableHead className="w-1/3 text-left">Full Name</TableHead>
+                <TableCell>{student?.name}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableHead className="w-1/3 text-left">
+                  Parent's Number
+                </TableHead>
+                <TableCell>{student?.parentPhone}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableHead className="w-1/3 text-left">Teacher</TableHead>
+                {/* <TableCell>{student}</TableCell> */}
+              </TableRow>
+              <TableRow>
+                <TableHead className="w-1/3 text-left">Class/Level</TableHead>
+                <TableCell>
+                  {classLoader ? "Loading..." : classData?.name}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableHead className="w-1/3 text-left">Gender</TableHead>
+                <TableCell>{student?.gender}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableHead className="w-1/3 text-left">Age</TableHead>
+                <TableCell>{student?.age} years old</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </section>
   );
 }

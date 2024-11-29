@@ -19,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
 
 const ActionMenu = ({
   id,
@@ -31,6 +32,23 @@ const ActionMenu = ({
   onDelete: (id: string | number) => void;
   hasEdit?: boolean;
 }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    setError(null); // Clear any previous errors
+    try {
+      await onDelete(id);
+    } catch (err) {
+      console.log(err);
+      console.log(error);
+      setError(`Failed to delete ${resourceName}. Please try again.`);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -56,7 +74,7 @@ const ActionMenu = ({
               className="bg-red-500 hover:bg-red-600 text-white"
               onSelect={(e) => e.preventDefault()}
             >
-              Delete Teacher
+              Delete {resourceName}
             </DropdownMenuItem>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -65,17 +83,20 @@ const ActionMenu = ({
               <AlertDialogDescription className="text-base">
                 This action cannot be undone. This will permanently delete the
                 user data for the{" "}
-                <span className="font-bold text-black">{resourceName}</span> and
-                remove their data.
+                <span className="font-bold text-black">
+                  {resourceName + " " + id}
+                </span>{" "}
+                and remove their data.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => onDelete(id)}
+                onClick={handleDelete}
+                disabled={isDeleting}
                 className="bg-red-500 hover:bg-red-600"
               >
-                Delete
+                {isDeleting ? "Deleting..." : "Delete"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

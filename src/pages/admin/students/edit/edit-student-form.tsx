@@ -10,38 +10,84 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUpdateStudent } from "@/services/api/queries";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 export default function EditStudentForm({
   studentData,
+  classList,
 }: {
-  studentData: Student | undefined;
+  studentData: Student;
+  classList: Class[];
 }) {
+  const { mutate: updateStudent, isLoading } = useUpdateStudent();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    // formState: { errors },
+  } = useForm<Student>();
+
+  const gender = watch("gender");
+  const classId = watch("classId");
+  const activeClass = classList?.find((c) => c.id === classId);
+
+  const onSubmit = async (data: Student) => {
+    try {
+      await updateStudent({
+        ...data,
+        gender,
+        classId: Number(classId),
+        age: Number(data?.age),
+        id: studentData?.id,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
         {/* First Name */}
         <div className="space-y-2">
-          <Label htmlFor="first-name">First Name</Label>
+          <Label htmlFor="name">Full Name</Label>
           <Input
             type="name"
-            name="first-name"
-            id="first-name"
+            id="name"
+            {...register("name", { required: true })}
             autoComplete="off"
-            defaultValue={studentData?.first_name}
+            defaultValue={studentData?.name}
             className="bg-transparent"
             required
           />
         </div>
-        {/* Last Name */}
+        {/* Parent number*/}
         <div className="space-y-2">
-          <Label htmlFor="last-name">Last Name</Label>
+          <Label htmlFor="parentPhone">Parent Number</Label>
           <Input
-            type="name"
-            name="last-name"
-            id="last-name"
+            type="text"
+            id="parentPhone"
+            {...register("parentPhone", { required: true })}
             autoComplete="off"
-            defaultValue={studentData?.last_name}
+            defaultValue={studentData?.parentPhone}
+            placeholder="Parent's number"
+            className="bg-transparent"
+          />
+        </div>
+        {/* Age */}
+        <div className="space-y-2">
+          <Label htmlFor="age">Age</Label>
+          <Input
+            type="number"
+            id="age"
+            {...register("age", { required: true })}
+            autoComplete="off"
+            defaultValue={studentData?.age}
+            placeholder="Age"
             className="bg-transparent"
             required
           />
@@ -49,39 +95,56 @@ export default function EditStudentForm({
         {/* Class */}
         <div className="space-y-2">
           <Label htmlFor="class">Class</Label>
-          <Select name="class">
-            <SelectTrigger name="class" className="bg-transparent">
-              <SelectValue placeholder="Select Class" />
+          <Select
+            value={classId?.toString()}
+            onValueChange={(value) =>
+              setValue("classId", Number(value), {
+                shouldValidate: true,
+              })
+            }
+            defaultValue=""
+          >
+            <SelectTrigger className="bg-transparent">
+              <SelectValue placeholder={activeClass?.name || "Select Class"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="jss1">JSS 1</SelectItem>
-              <SelectItem value="jss2">JSS 2</SelectItem>
-              <SelectItem value="jss3">JSS 3</SelectItem>
-              <SelectItem value="sss1">SSS 1</SelectItem>
-              <SelectItem value="sss2">SSS 2</SelectItem>
-              <SelectItem value="sss3">SSS 3</SelectItem>
+              {classList?.map((classItem) => (
+                <SelectItem key={classItem.id} value={classItem.id.toString()}>
+                  {classItem.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-        {/* Status */}
+        {/* Gender */}
         <div className="space-y-2">
-          <Label htmlFor="status">Status</Label>
-          <Select name="status">
+          <Label htmlFor="gender">Gender</Label>
+          <Select
+            value={gender} // Bind `Select`'s value to `watch` output
+            onValueChange={(value) =>
+              setValue("gender", value as "male" | "female", {
+                shouldValidate: true,
+              })
+            }
+          >
             <SelectTrigger className="bg-transparent">
-              <SelectValue placeholder="Select Status" />
+              <SelectValue
+                placeholder={studentData?.gender || "Male/Female"}
+                className="capitalize"
+              />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="male">Male</SelectItem>
+              <SelectItem value="female">Female</SelectItem>
             </SelectContent>
           </Select>
         </div>
         {/* Submit button */}
-        <Button type="submit" className="w-full" disabled={false}>
+        <Button type="submit" className="w-full" disabled={isLoading}>
           <ButtonLoader
-            isPending={false}
+            isPending={isLoading}
             fallback="Update Teacher"
-            loadingText="Updating Teacher"
+            loadingText="Updating Teacher..."
           />
         </Button>
       </CardContent>

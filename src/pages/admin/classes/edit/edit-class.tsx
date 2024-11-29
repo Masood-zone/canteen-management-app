@@ -5,16 +5,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { classesList } from "@/utils/mock";
+import { useFetchClassById, useFetchTeachers } from "@/services/api/queries";
 import { useParams } from "react-router-dom";
 import EditClassForm from "./edit-class-form";
 
 export default function EditClass() {
   const { id } = useParams();
-
-  const classData = classesList.find(
-    (classItem) => classItem.class_id === Number(id)
-  );
+  const {
+    data: classData,
+    isLoading,
+    error,
+  } = useFetchClassById(Number(id) || 0) as {
+    data: Class;
+    isLoading: boolean;
+    error: { message: string } | null;
+  };
+  const { data: teachers } = useFetchTeachers();
 
   return (
     <section className="w-full">
@@ -28,7 +34,16 @@ export default function EditClass() {
             Fill in the details below to edit a class.
           </CardDescription>
         </CardHeader>
-        <EditClassForm classData={classData} />
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <div className="text-red-500" role="alert">
+            Error:
+            {error?.message}
+          </div>
+        ) : (
+          <EditClassForm classData={classData} teachersList={teachers} />
+        )}
       </Card>
     </section>
   );
