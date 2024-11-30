@@ -55,7 +55,7 @@ export const fetchTeacher = async (id: number) => {
  */
 export const createTeacher = async (data: Teacher) => {
   try {
-    const response = await apiClient.post("/teachers", data);
+    const response = await apiClient.post("/signup", data);
     return response.data;
   } catch (error) {
     console.error("Error creating teacher:", error);
@@ -169,12 +169,26 @@ export const createClass = async (data: {
 export const fetchStudents = async () => {
   try {
     const response = await apiClient.get("/students");
-    return response.data;
+    return response.data.students;
   } catch (error) {
     console.error("Error fetching students:", error);
     throw error;
   }
 };
+
+/**
+ * Fetch all students in a class.
+ */
+export const fetchStudentsInClass = async (id: number) => {
+  try {
+    const response = await apiClient.get(`/students/class/${id}`);
+    return response.data.students;
+  } catch (error) {
+    console.error("Error fetching students in class:", error);
+    throw error;
+  }
+};
+
 /**
  * Fetch a student.
  */

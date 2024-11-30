@@ -9,7 +9,7 @@ export const useLogin = () => {
     onMutate: () => setLoading(),
     onSuccess: (user) => {
       // Save user object in zustand
-      login({ user, token: user?.token });
+      login({ user, token: user?.token, assigned_class: user?.assigned_class });
       toast("Logged in successfully!");
     },
     onError: (error) => {

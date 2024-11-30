@@ -96,7 +96,9 @@ export default function TeachersTable({
       },
       cell: ({ row }) => {
         const gender = row.original.gender;
-        return <span className="text-center capitalize">{gender}</span>;
+        return (
+          <span className="text-center capitalize">{gender || "N/A"}</span>
+        );
       },
     },
     {

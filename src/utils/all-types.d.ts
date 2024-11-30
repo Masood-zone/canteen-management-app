@@ -42,6 +42,12 @@ interface User {
     role: string;
     avatar?: string;
     gender: string;
+    assigned_class?: {
+      id: number;
+      name: string;
+      description: string;
+      supervisorId: number;
+    };
   };
 }
 interface FormUser {
@@ -95,6 +101,7 @@ type Class = {
 interface AuthStore {
   user: User | null | undefined;
   token: token | string | null;
+  assigned_class: Class | null;
   isAuthenticated: boolean;
   login: (user) => void;
   logout: () => void;

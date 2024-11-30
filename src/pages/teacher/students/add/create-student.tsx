@@ -19,9 +19,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCreateStudent, useFetchClasses } from "@/services/api/queries";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 export default function AddStudent() {
+  const { mutate: createStudent, isLoading } = useCreateStudent();
+  const { data: classList } = useFetchClasses();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm<Student>();
+  const gender = watch("gender");
+  const classId = watch("classId");
+  const onSubmit = async (data: Student) => {
+    try {
+      await createStudent({
+        ...data,
+        age: Number(data.age),
+        classId: Number(data.classId),
+      });
+    } catch (error) {
+      console.error("Error creating student:", error);
+    }
+  };
+
   return (
     <section className="w-full">
       <Card className="w-full bg-transparent border-none shadow-none">
@@ -34,69 +59,94 @@ export default function AddStudent() {
             <p>Register a new student to the platform</p>
           </CardDescription>
         </CardHeader>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
-            {/* First Name */}
+            {/* Full Name */}
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="name">Full Name</Label>
               <Input
                 type="name"
-                name="firstName"
-                id="firstName"
+                id="name"
+                {...register("name", { required: true })}
                 autoComplete="off"
                 placeholder="Student's first name"
                 className="bg-transparent"
                 required
               />
+              {errors.name && (
+                <p className="text-red-500 text-sm">This field is required</p>
+              )}
             </div>
-            {/* Last Name */}
+            {/* Parent contact */}
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="parentPhone">Parent Contact</Label>
               <Input
                 type="name"
-                name="lastName"
-                id="lastName"
+                id="parentPhone"
+                {...register("parentPhone", { required: true })}
                 autoComplete="off"
                 placeholder="Student's last name"
                 className="bg-transparent"
                 required
               />
+              {errors.parentPhone && (
+                <p className="text-red-500 text-sm">This field is required</p>
+              )}
             </div>
             {/* Class */}
             <div className="space-y-2">
               <Label htmlFor="class">Class</Label>
-              <Select name="class">
+              <Select
+                value={classId?.toString()}
+                onValueChange={(value) =>
+                  setValue("classId", value, {
+                    shouldValidate: true,
+                  })
+                }
+              >
                 <SelectTrigger name="class" className="bg-transparent">
                   <SelectValue placeholder="Select class" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="JSS1">JSS1</SelectItem>
-                  <SelectItem value="JSS2">JSS2</SelectItem>
-                  <SelectItem value="JSS3">JSS3</SelectItem>
-                  <SelectItem value="SS1">SS1</SelectItem>
-                  <SelectItem value="SS2">SS2</SelectItem>
-                  <SelectItem value="SS3">SS3</SelectItem>
+                  {classList?.map((item: Class) => (
+                    <SelectItem key={item.id} value={item.id.toString()}>
+                      {item.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+              {errors.classId && (
+                <p className="text-red-500 text-sm">This field is required</p>
+              )}
             </div>
             {/* Age */}
             <div className="space-y-2">
               <Label htmlFor="age">Age</Label>
               <Input
                 type="number"
-                name="age"
+                {...register("age", { required: true })}
                 id="age"
                 placeholder="Student's age"
                 autoComplete="off"
                 className="bg-transparent"
                 required
               />
+              {errors.age && (
+                <p className="text-red-500 text-sm">This field is required</p>
+              )}
             </div>
             {/* Gender */}
             <div className="space-y-2">
               <Label htmlFor="gender">Gender</Label>
-              <Select name="gender">
-                <SelectTrigger name="gender" className="bg-transparent">
+              <Select
+                value={gender} // Bind `Select`'s value to `watch` output
+                onValueChange={(value) =>
+                  setValue("gender", value as "male" | "female", {
+                    shouldValidate: true,
+                  })
+                }
+              >
+                <SelectTrigger className="bg-transparent">
                   <SelectValue placeholder="Gender" />
                 </SelectTrigger>
                 <SelectContent>
@@ -106,9 +156,9 @@ export default function AddStudent() {
               </Select>
             </div>
             {/* Submit */}
-            <Button type="submit" className="w-full" disabled={false}>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               <ButtonLoader
-                isPending={false}
+                isPending={isLoading}
                 loadingText="Registering..."
                 fallback="Register"
               />

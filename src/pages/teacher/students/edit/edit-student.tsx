@@ -5,13 +5,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { studentsList } from "@/utils/mock";
 import { useParams } from "react-router-dom";
 import EditStudentForm from "./edit-student-form";
+import { useFetchClasses, useFetchStudent } from "@/services/api/queries";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function EditStudent() {
   const { id } = useParams();
-  const studentData = studentsList.find((student) => student.id === Number(id));
+  const { data: student, error } = useFetchStudent(Number(id)) as {
+    data: { student: Student };
+    error: { message: string };
+  };
+  const { data: classList, error: classListError } = useFetchClasses();
+
+  // Show error toast if there is an error fetching classes
+  useEffect(() => {
+    if (classListError) {
+      toast("Failed to fetch classes, please refresh the page and try again.");
+    }
+  }, [classListError]);
+
   return (
     <section className="w-full">
       <Card className="w-full bg-transparent border-none shadow-none">
@@ -24,7 +38,14 @@ export default function EditStudent() {
             Fill in the details below to edit a student.
           </CardDescription>
         </CardHeader>
-        <EditStudentForm studentData={studentData} />
+        {error ? (
+          <p>{error.message}</p>
+        ) : (
+          <EditStudentForm
+            studentData={student?.student}
+            classList={classList}
+          />
+        )}
       </Card>
     </section>
   );

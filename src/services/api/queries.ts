@@ -19,6 +19,7 @@ import {
   updateUser,
   fetchRecordsAmount,
   updateRecordsAmount,
+  fetchStudentsInClass,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -90,6 +91,18 @@ export const useFetchStudents = () => {
     },
   });
 };
+/**
+ * Query: Fetch all students of a class.
+ */
+export const useFetchStudentsByClass = (id: number) => {
+  return useQuery(["students", id], () => fetchStudentsInClass(id), {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch students in this class.");
+    },
+  });
+};
+
 /**
  * Query: Fetch a student.
  */
