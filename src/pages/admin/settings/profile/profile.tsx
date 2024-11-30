@@ -104,7 +104,7 @@ export default function Profile() {
                   value={gender}
                   onValueChange={(value) => setValue("gender", value)}
                 >
-                  <SelectTrigger className="">
+                  <SelectTrigger className="capitalize">
                     <SelectValue placeholder={userData?.gender || "Gender"} />
                   </SelectTrigger>
                   <SelectContent>

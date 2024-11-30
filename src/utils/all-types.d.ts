@@ -63,6 +63,12 @@ type Student = {
   gender: "male" | "female";
 };
 
+type RecordsAmount = {
+  id: number;
+  name: string;
+  value: string;
+};
+
 type Teacher = {
   id: number;
   name: string;
@@ -96,6 +102,7 @@ interface AuthStore {
   setLoading: () => void;
   setLoaded: () => void;
 }
+
 interface ProtectedRouteProps {
   children: ReactNode;
   roles?: string[];

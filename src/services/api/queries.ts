@@ -17,9 +17,22 @@ import {
   fetchStudent,
   updateStudent,
   updateUser,
+  fetchRecordsAmount,
+  updateRecordsAmount,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
+/**
+ * Query: Fetch records amount.
+ */
+export const useFetchRecordsAmount = () => {
+  return useQuery(["recordsAmount"], fetchRecordsAmount, {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch records amount.");
+    },
+  });
+};
 /**
  * Query: Fetch all teachers.
  */
@@ -100,20 +113,49 @@ export const useFetchRecords = () => {
     },
   });
 };
+
+/**
+ * Mutation: Update records amount..
+ */
+export const useUpdateRecordsAmount = () => {
+  return useMutation((amount: number) => updateRecordsAmount(amount), {
+    onSuccess: () => {
+      toast.success("Records amount updated successfully!");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to update records amount. Please try again.");
+    },
+  });
+};
+
 /**
  * Mutation: Update a user by calling upon updateUser function
  */
 export const useUpdateUser = () => {
-  // const queryClient = useQueryClient();
   return useMutation((data: FormUser) => updateUser(data), {
     onSuccess: () => {
       toast.success("User updated successfully!");
-      // Invalidate the query to refresh the page
-      // queryClient.invalidateQueries(["profile"]);
     },
     onError: (error) => {
       console.error(error);
       toast.error("Failed to update user. Please try again.");
+    },
+    onSettled: (data) => {
+      // Update the user in localStorage after updating
+      const existingUser = JSON.parse(localStorage.getItem("user") || "{}");
+      const updatedUser = {
+        ...existingUser,
+        user: {
+          ...existingUser.user,
+          email: data?.data.email,
+          gender: data?.data.gender,
+          name: data?.data.name,
+          phone: data?.data.phone,
+        },
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
     },
   });
 };

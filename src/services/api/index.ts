@@ -1,11 +1,24 @@
 import { apiClient } from "../root";
 
 /**
+ * Fetch records amount.
+ */
+export const fetchRecordsAmount = async () => {
+  try {
+    const response = await apiClient.get("/settings/amount");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching records amount:", error);
+    throw error;
+  }
+};
+
+/**
  * Update User
  */
 export const updateUser = async (data: FormUser) => {
   try {
-    const response = await apiClient.put(`/users/update`, data);
+    const response = await apiClient.put(`/users/update/${data.id}`, data);
     return response.data;
   } catch (error) {
     console.error("Error updating user:", error);
@@ -90,6 +103,18 @@ export const assignTeacherToClass = async (
     return response.data;
   } catch (error) {
     console.error("Error assigning teacher to class:", error);
+    throw error;
+  }
+};
+/**
+ * Update records amount
+ */
+export const updateRecordsAmount = async (amount: number) => {
+  try {
+    const response = await apiClient.put("/settings/amount", { amount });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating records amount:", error);
     throw error;
   }
 };

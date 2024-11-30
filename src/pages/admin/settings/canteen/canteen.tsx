@@ -10,8 +10,41 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  useFetchRecordsAmount,
+  useUpdateRecordsAmount,
+} from "@/services/api/queries";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 
 export default function Canteen() {
+  const { mutate: updateRecordsAmount, isLoading: updatingPriceLoader } =
+    useUpdateRecordsAmount();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RecordsAmount>();
+  const { data: amountSetting, isLoading, error } = useFetchRecordsAmount();
+
+  useEffect(() => {
+    if (error) {
+      console.error("Error fetching records amount:", error);
+      toast.error("Failed to fetch records amount.");
+    }
+  }, [error]);
+
+  const onSubmit = async (data: RecordsAmount) => {
+    const value = parseFloat(data.value);
+    try {
+      await updateRecordsAmount(value);
+    } catch (error) {
+      console.error("Error updating records amount:", error);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -28,18 +61,18 @@ export default function Canteen() {
             Choose what notifications you want to receive.
           </CardDescription>
         </CardHeader>
-        <form>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex-1 space-y-1">
-                <Label htmlFor="daily-menu">Daily Payments Notifications</Label>
-                <p className="text-sm text-muted-foreground">
-                  Receive notifications about the daily payments updates.
-                </p>
-              </div>
-              <Switch id="daily-menu" />
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between space-x-4">
+            <div className="flex-1 space-y-1">
+              <Label htmlFor="daily-menu">Daily Payments Notifications</Label>
+              <p className="text-sm text-muted-foreground">
+                Receive notifications about the daily payments updates.
+              </p>
             </div>
-            <Separator />
+            <Switch id="daily-menu" />
+          </div>
+          <Separator />
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center justify-between space-x-4">
               <div className="flex-1 space-y-1">
                 <Label htmlFor="canteen-price">Canteen Pricing</Label>
@@ -47,18 +80,39 @@ export default function Canteen() {
                   Change the pricing of the canteen items.
                 </p>
               </div>
-              <Input
-                id="canteen-price"
-                type="number"
-                className="w-56 text-right"
-                min="0"
-              />
+              {isLoading ? (
+                <div>
+                  <Skeleton className="h-8 w-56 bg-muted/50" />
+                </div>
+              ) : (
+                <>
+                  <Input
+                    id="canteen-price"
+                    type="number"
+                    defaultValue={amountSetting?.data?.value}
+                    {...register("value")}
+                    className="w-56 text-right"
+                    min="0"
+                  />
+                  {errors.value && (
+                    <p className="text-red-500 text-sm">
+                      {typeof errors.value?.message === "string" && (
+                        <p className="text-red-500 text-sm">
+                          {errors.value.message}
+                        </p>
+                      )}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
             <div className="flex justify-end">
-              <Button type="submit">Save Changes</Button>
+              <Button type="submit" disabled={updatingPriceLoader}>
+                {updatingPriceLoader ? "Saving..." : "Save Changes"}
+              </Button>
             </div>
-          </CardContent>
-        </form>
+          </form>
+        </CardContent>
       </Card>
     </div>
   );
