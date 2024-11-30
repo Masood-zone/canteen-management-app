@@ -41,7 +41,17 @@ interface User {
     phone: string;
     role: string;
     avatar?: string;
+    gender: string;
   };
+}
+interface FormUser {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  role: string;
+  avatar?: string;
+  gender: string;
 }
 
 type Student = {

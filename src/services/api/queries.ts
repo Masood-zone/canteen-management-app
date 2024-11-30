@@ -16,6 +16,7 @@ import {
   updateClass,
   fetchStudent,
   updateStudent,
+  updateUser,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -99,6 +100,24 @@ export const useFetchRecords = () => {
     },
   });
 };
+/**
+ * Mutation: Update a user by calling upon updateUser function
+ */
+export const useUpdateUser = () => {
+  // const queryClient = useQueryClient();
+  return useMutation((data: FormUser) => updateUser(data), {
+    onSuccess: () => {
+      toast.success("User updated successfully!");
+      // Invalidate the query to refresh the page
+      // queryClient.invalidateQueries(["profile"]);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to update user. Please try again.");
+    },
+  });
+};
+
 /**
  * Mutation: Create a teacher.
  */

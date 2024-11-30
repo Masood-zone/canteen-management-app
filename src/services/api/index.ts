@@ -1,6 +1,19 @@
 import { apiClient } from "../root";
 
 /**
+ * Update User
+ */
+export const updateUser = async (data: FormUser) => {
+  try {
+    const response = await apiClient.put(`/users/update`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
+/**
  * Fetch all teachers.
  */
 export const fetchTeachers = async () => {

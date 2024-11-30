@@ -55,15 +55,7 @@ export const super_nav = {
       items: [
         {
           title: "General",
-          url: "/settings",
-        },
-        {
-          title: "Teachers",
-          url: "/settings/teachers",
-        },
-        {
-          title: "Notifications",
-          url: "#",
+          url: "/admin/settings",
         },
       ],
     },
@@ -115,10 +107,6 @@ export const teacher_nav = {
         {
           title: "General",
           url: "/teacher/settings",
-        },
-        {
-          title: "Notifications",
-          url: "#",
         },
       ],
     },

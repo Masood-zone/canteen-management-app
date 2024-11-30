@@ -107,6 +107,46 @@ const rootRoutes = createBrowserRouter(
             return { Component: AdminHome };
           }}
         />
+        {/* Settings */}
+        <Route
+          path="settings"
+          lazy={async () => {
+            const { default: SettingsLayout } = await import(
+              "@/pages/admin/settings/index.tsx"
+            );
+            return { Component: SettingsLayout };
+          }}
+        >
+          <Route
+            index
+            lazy={async () => {
+              const { default: Settings } = await import(
+                "@/pages/admin/settings/settings.tsx"
+              );
+              return { Component: Settings };
+            }}
+          />
+          {/* Profile */}
+          <Route
+            path="profile"
+            lazy={async () => {
+              const { default: Profile } = await import(
+                "@/pages/admin/settings/profile/profile.tsx"
+              );
+              return { Component: Profile };
+            }}
+          />
+          {/* Canteen */}
+          <Route
+            path="canteen"
+            lazy={async () => {
+              const { default: Canteen } = await import(
+                "@/pages/admin/settings/canteen/canteen.tsx"
+              );
+              return { Component: Canteen };
+            }}
+          />
+        </Route>
         {/* Teachers */}
         <Route
           path="teachers"

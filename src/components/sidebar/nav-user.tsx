@@ -19,12 +19,15 @@ import {
 import { useLogout } from "@/hooks/use-auth";
 import LoadingOverlay from "../shared/page-loader/loading-overlay";
 import { getInitials } from "@/utils/getInitials";
+import { useNavigate } from "react-router-dom";
 
 export function NavUser({ user }: { user: User }) {
-  const { name, email, avatar } = user?.user ?? {
+  const navigate = useNavigate();
+  const { name, email, avatar, role } = user?.user ?? {
     name: "",
     email: "",
     avatar: "",
+    role: "",
   };
 
   const initials = getInitials(name, email);
@@ -78,7 +81,17 @@ export function NavUser({ user }: { user: User }) {
             </DropdownMenuLabel>
             {/* Account */}
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  if (role == "SUPER_ADMIN") {
+                    navigate("/admin/settings");
+                  } else if (role == "TEACHER") {
+                    navigate("/teacher/settings");
+                  } else if (!role) {
+                    navigate("/");
+                  }
+                }}
+              >
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
