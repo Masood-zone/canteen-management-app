@@ -8,41 +8,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  useFetchRecordsAmount,
-  useUpdateRecordsAmount,
-} from "@/services/api/queries";
+import { useFetchRecordsAmount } from "@/services/api/queries";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect } from "react";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
 
 export default function Canteen() {
-  const { mutate: updateRecordsAmount, isLoading: updatingPriceLoader } =
-    useUpdateRecordsAmount();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RecordsAmount>();
   const { data: amountSetting, isLoading, error } = useFetchRecordsAmount();
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error fetching records amount:", error);
-      toast.error("Failed to fetch records amount.");
-    }
-  }, [error]);
-
-  const onSubmit = async (data: RecordsAmount) => {
-    try {
-      await updateRecordsAmount(data);
-    } catch (error) {
-      console.error("Error updating records amount:", error);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -71,45 +41,34 @@ export default function Canteen() {
             <Switch id="daily-menu" />
           </div>
           <Separator />
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form>
             <div className="flex items-center justify-between space-x-4">
               <div className="flex-1 space-y-1">
                 <Label htmlFor="canteen-price">Canteen Pricing</Label>
                 <p className="text-sm text-muted-foreground">
-                  Change the pricing of the canteen items.
+                  Here is the current price for the canteen.
                 </p>
               </div>
               {isLoading ? (
                 <div>
                   <Skeleton className="h-8 w-56 bg-muted/50" />
                 </div>
+              ) : error ? (
+                <div className="text-red-500">
+                  Could not fetch the canteen price. Please try again later.
+                </div>
               ) : (
                 <>
-                  <Input
-                    id="canteen-price"
-                    type="number"
-                    defaultValue={amountSetting?.data?.value}
-                    {...register("value")}
-                    className="w-56 text-right"
-                    min="0"
-                  />
-                  {errors.value && (
-                    <p className="text-red-500 text-sm">
-                      {typeof errors.value?.message === "string" && (
-                        <p className="text-red-500 text-sm">
-                          {errors.value.message}
-                        </p>
-                      )}
-                    </p>
-                  )}
+                  <span className="text-muted-foreground">Price per meal:</span>
+                  <span>Ghc{amountSetting?.data?.value}</span>
                 </>
               )}
             </div>
-            <div className="flex justify-end">
-              <Button type="submit" disabled={updatingPriceLoader}>
-                {updatingPriceLoader ? "Saving..." : "Save Changes"}
+            {/* <div className="flex justify-end">
+              <Button type="submit" disabled={false}>
+                {false ? "Saving..." : "Save Changes"}
               </Button>
-            </div>
+            </div> */}
           </form>
         </CardContent>
       </Card>

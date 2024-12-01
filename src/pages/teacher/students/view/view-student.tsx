@@ -10,20 +10,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useFetchClassById, useFetchStudent } from "@/services/api/queries";
+import { useAuthStore } from "@/store/authStore";
 import { Edit2Icon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 export default function ViewStudent() {
+  const { user } = useAuthStore();
   const { id } = useParams();
   const {
-    data: student,
+    data: studentData,
     isLoading,
     error,
   } = useFetchStudent(Number(id) as number);
   const { data: classData, isLoading: classLoader } = useFetchClassById(
     Number(id)
   );
-
+  const student = studentData?.student;
+  const teacher = user?.user;
   return (
     <section className="w-full space-y-5">
       {/* Go back */}
@@ -69,7 +72,11 @@ export default function ViewStudent() {
               </TableRow>
               <TableRow>
                 <TableHead className="w-1/3 text-left">Teacher</TableHead>
-                {/* <TableCell>{student}</TableCell> */}
+                <TableCell>
+                  {teacher?.role === "TEACHER" || teacher?.role === "Teacher"
+                    ? teacher?.name
+                    : teacher?.role === "SUPER_ADMIN" && "Admin"}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableHead className="w-1/3 text-left">Class/Level</TableHead>
@@ -79,7 +86,7 @@ export default function ViewStudent() {
               </TableRow>
               <TableRow>
                 <TableHead className="w-1/3 text-left">Gender</TableHead>
-                <TableCell>{student?.gender}</TableCell>
+                <TableCell className="capitalize">{student?.gender}</TableCell>
               </TableRow>
               <TableRow>
                 <TableHead className="w-1/3 text-left">Age</TableHead>

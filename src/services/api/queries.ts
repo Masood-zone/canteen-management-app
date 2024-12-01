@@ -7,8 +7,6 @@ import {
   createClass,
   fetchStudents,
   createStudent,
-  fetchRecords,
-  createRecord,
   fetchTeachers,
   fetchTeacher,
   updateTeacher,
@@ -18,8 +16,11 @@ import {
   updateStudent,
   updateUser,
   fetchRecordsAmount,
-  updateRecordsAmount,
   fetchStudentsInClass,
+  getPresetAmount,
+  submitStudentRecord,
+  fetchRecordsByClassAndDate,
+  updateRecordsAmount,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -111,33 +112,6 @@ export const useFetchStudent = (id: number) => {
     onError: (error) => {
       console.log(error);
       toast.error("Failed to fetch student.");
-    },
-  });
-};
-
-/**
- * Query: Fetch all records.
- */
-export const useFetchRecords = () => {
-  return useQuery(["records"], fetchRecords, {
-    onError: (error) => {
-      console.error(error);
-      toast.error("Failed to fetch records.");
-    },
-  });
-};
-
-/**
- * Mutation: Update records amount..
- */
-export const useUpdateRecordsAmount = () => {
-  return useMutation((amount: number) => updateRecordsAmount(amount), {
-    onSuccess: () => {
-      toast.success("Records amount updated successfully!");
-    },
-    onError: (error) => {
-      console.error(error);
-      toast.error("Failed to update records amount. Please try again.");
     },
   });
 };
@@ -324,26 +298,67 @@ export const useUpdateStudent = () => {
 };
 
 /**
- * Mutation: Create a new record.
+ * Query: Fetch all records of a class by date.
  */
-export const useCreateRecord = () => {
-  return useMutation(
-    (data: {
-      amount: number;
-      submiter_email: string;
-      student_name: string;
-      isPrepaid: boolean;
-    }) => createRecord(data),
+export const useFetchRecordsByClassAndDate = (
+  classId: number,
+  date: string
+) => {
+  return useQuery(
+    ["records", classId, date],
+    () => fetchRecordsByClassAndDate(classId, date),
     {
-      onSuccess: () => {
-        toast.success("Record created successfully!");
-      },
       onError: (error) => {
         console.error(error);
-        toast.error("Failed to create record. Please try again.");
+        toast.error("Failed to fetch records.");
       },
     }
   );
+};
+
+/**
+ * Mutation: Update settins amount.
+ */
+export const useUpdateRecordsAmount = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: RecordsAmount) => updateRecordsAmount(data), {
+    onSuccess: () => {
+      toast.success("Preset amount updated successfully!");
+      queryClient.invalidateQueries(["records"]);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to update preset amount.");
+    },
+  });
+};
+/**
+ * Mutation: Submit a student record.
+ */
+export const useSubmitStudentRecord = () => {
+  const queryClient = useQueryClient();
+  return useMutation(submitStudentRecord, {
+    onSuccess: () => {
+      toast.success("Record submitted successfully!");
+      queryClient.invalidateQueries(["records"]);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to submit record.");
+    },
+  });
+};
+
+/**
+ * Query: Get preset amount.
+ */
+export const useGetPresetAmount = () => {
+  return useQuery(["presetAmount"], getPresetAmount, {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch preset amount.");
+    },
+  });
 };
 
 /**

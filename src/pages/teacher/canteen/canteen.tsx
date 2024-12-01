@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import CanteenList from "./list/table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,21 +13,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import CanteenList from "./list/table";
 
 export default function Canteen() {
   const navigate = useNavigate();
-  const currentUser = {
-    id: "90",
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@gmail.com",
-    role: "TEACHER",
-    profileUrl: "",
-    class: {
-      id: "2012",
-      name: "Class 5",
-    },
-  };
+  const { user, assigned_class } = useAuthStore();
+  const teacher = user?.user;
 
   return (
     <section className="container mx-auto py-10">
@@ -36,13 +27,9 @@ export default function Canteen() {
       <div className="flex items-center justify-between mb-8">
         {/* Teacher info with assigned class */}
         <div>
-          <h1 className="text-2xl font-bold">
-            Hello, {currentUser?.firstName} {currentUser?.lastName}
-          </h1>
-          <p className="text-base">{currentUser?.class?.name}</p>
-          <p className="text-base">
-            Record canteen transactions for {currentUser?.class?.name}
-          </p>
+          <h1 className="text-2xl font-bold">Hello, {teacher?.name}</h1>
+          <p className="text-xl py-2">{assigned_class?.name}</p>
+          <p className="text-base">Record canteen for {assigned_class?.name}</p>
         </div>
         {/* Record canteen button */}
         <div>
@@ -55,8 +42,7 @@ export default function Canteen() {
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will submit the canteen
-                  records for {currentUser?.class?.name} to the admin for
-                  approval.
+                  records for {teacher?.name} to the admin for approval.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

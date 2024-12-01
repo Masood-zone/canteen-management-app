@@ -40,7 +40,7 @@ export function SettingsSidebar({
               <NavLink
                 key={item.href}
                 to={item.href}
-                end={item.href === "/admin/settings"} // Use `end` for the root route
+                end={item.href === ""} // Use `end` for the root route
                 className={({ isActive }) =>
                   cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",

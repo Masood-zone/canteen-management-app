@@ -131,6 +131,7 @@ export default function StudentsTable({
           <ActionMenu
             id={student.id}
             resourceName="Student"
+            hasDelete={false}
             onDelete={(id) => deleteStudent(id)}
           />
         );

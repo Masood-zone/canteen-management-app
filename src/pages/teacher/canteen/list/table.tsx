@@ -1,51 +1,51 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { CanteenTable } from "@/components/tables/canteen-table";
 import { columns } from "./columns";
-import { canteenRecords } from "@/utils/mock";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  useFetchRecordsByClassAndDate,
+  useSubmitStudentRecord,
+} from "@/services/api/queries";
+import { useAuthStore } from "@/store/authStore";
+import { TableSkeleton } from "@/components/shared/page-loader/loaders";
 
 export default function CanteenList() {
-  const [unpaidRecords, setUnpaidRecords] = useState(
-    canteenRecords.filter((record) => !record.paid && !record.absent)
-  );
-  const [paidRecords, setPaidRecords] = useState(
-    canteenRecords.filter((record) => record.paid)
-  );
-  const [absentRecords, setAbsentRecords] = useState(
-    canteenRecords.filter((record) => record.absent)
-  );
+  const { user, assigned_class } = useAuthStore();
+  const classId = assigned_class?.id ?? 0;
+  const today = new Date().toISOString().split("T")[0];
 
-  const handlePaymentStatusChange = (id: string, isPaid: boolean) => {
-    if (isPaid) {
-      const record = unpaidRecords.find((r) => r.id === id);
-      if (record) {
-        setUnpaidRecords(unpaidRecords.filter((r) => r.id !== id));
-        setPaidRecords([...paidRecords, { ...record, paid: true }]);
-      }
-    } else {
-      const record = paidRecords.find((r) => r.id === id);
-      if (record) {
-        setPaidRecords(paidRecords.filter((r) => r.id !== id));
-        setUnpaidRecords([...unpaidRecords, { ...record, paid: false }]);
-      }
+  const {
+    data: records,
+    isLoading,
+    error,
+  } = useFetchRecordsByClassAndDate(classId, today);
+
+  const submitRecord = useSubmitStudentRecord();
+
+  const [unpaidRecords, setUnpaidRecords] = useState([]);
+  const [paidRecords, setPaidRecords] = useState([]);
+  const [absentRecords, setAbsentRecords] = useState([]);
+
+  useEffect(() => {
+    if (records) {
+      setUnpaidRecords(records?.unpaidStudents);
+      setPaidRecords(records?.paidStudents);
+      setAbsentRecords([]);
     }
+  }, [records]);
+
+  const handlePaymentStatusChange = async (id: number, isPaid: boolean) => {
+    console.log("handlePaymentStatusChange", id, isPaid);
   };
 
-  const handleAbsentStatusChange = (id: string, isAbsent: boolean) => {
-    if (isAbsent) {
-      const record = unpaidRecords.find((r) => r.id === id);
-      if (record) {
-        setUnpaidRecords(unpaidRecords.filter((r) => r.id !== id));
-        setAbsentRecords([...absentRecords, { ...record, absent: true }]);
-      }
-    } else {
-      const record = absentRecords.find((r) => r.id === id);
-      if (record) {
-        setAbsentRecords(absentRecords.filter((r) => r.id !== id));
-        setUnpaidRecords([...unpaidRecords, { ...record, absent: false }]);
-      }
-    }
+  const handleAbsentStatusChange = (id: number, isAbsent: boolean) => {
+    console.log("handleAbsentStatusChange", id, isAbsent);
   };
+
+  if (isLoading) return <TableSkeleton />;
+  if (error) return <div>Error: There was an error</div>;
 
   return (
     <Tabs defaultValue="unpaid" className="w-full">
@@ -58,21 +58,21 @@ export default function CanteenList() {
         <CanteenTable
           columns={columns(handlePaymentStatusChange, handleAbsentStatusChange)}
           data={unpaidRecords}
-          searchField="student.firstName"
+          searchField="student.name"
         />
       </TabsContent>
       <TabsContent value="paid">
         <CanteenTable
           columns={columns(handlePaymentStatusChange, handleAbsentStatusChange)}
           data={paidRecords}
-          searchField="student.firstName"
+          searchField="student.name"
         />
       </TabsContent>
       <TabsContent value="absent">
         <CanteenTable
           columns={columns(handlePaymentStatusChange, handleAbsentStatusChange)}
           data={absentRecords}
-          searchField="student.firstName"
+          searchField="student.name"
         />
       </TabsContent>
     </Tabs>

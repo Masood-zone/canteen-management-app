@@ -1,57 +1,78 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
+// Define the type for our record based on the provided structure
+type CanteenRecord = {
+  id: number;
+  amount: number;
+  submitedAt: string;
+  submitedBy: number;
+  payedBy: number | null;
+  isPrepaid: boolean;
+  hasPaid: boolean;
+  classId: number;
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  } | null;
+};
+
 export const columns = (
-  onPaymentStatusChange: (id: string, isPaid: boolean) => void,
-  onAbsentStatusChange: (id: string, isAbsent: boolean) => void
+  handlePaymentStatusChange: (id: number, isPaid: boolean) => void,
+  handleAbsentStatusChange: (id: number, isAbsent: boolean) => void
 ): ColumnDef<CanteenRecord>[] => [
   {
     accessorKey: "student",
-    header: "Student",
-    cell: ({ row }) =>
-      `${row.original.student.firstName} ${row.original.student.lastName}`,
-  },
-  {
-    accessorKey: "teacher",
-    header: "Teacher",
-    cell: ({ row }) =>
-      `${row.original.teacher.firstName} ${row.original.teacher.lastName}`,
-  },
-  {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => format(new Date(row.original.date), "PPP"),
+    header: "Student Name",
+    cell: ({ row }) => {
+      const student = row.original.student;
+      return student ? `${student.firstName} ${student.lastName}` : "N/A";
+    },
   },
   {
     accessorKey: "amount",
     header: "Amount",
-    cell: () => "Ghc5.00",
+    cell: ({ row }) => `₵${row.original.amount.toFixed(2)}`,
+  },
+  {
+    accessorKey: "submitedAt",
+    header: "Submitted At",
+    cell: ({ row }) => format(new Date(row.original.submitedAt), "PPp"),
+  },
+  {
+    accessorKey: "isPrepaid",
+    header: "Prepaid",
+    cell: ({ row }) => (row.original.isPrepaid ? "Yes" : "No"),
+  },
+  {
+    accessorKey: "hasPaid",
+    header: "Payment Status",
+    cell: ({ row }) => (row.original.hasPaid ? "Paid" : "Unpaid"),
   },
   {
     id: "actions",
-    header: "Actions",
     cell: ({ row }) => {
-      const isPaid = row.original.paid;
-      const isAbsent = row.original.absent;
+      const record = row.original;
       return (
         <div className="flex space-x-2">
-          {!isAbsent && (
+          <Button
+            variant={record.hasPaid ? "destructive" : "default"}
+            onClick={() =>
+              handlePaymentStatusChange(record.id, !record.hasPaid)
+            }
+          >
+            {record.hasPaid ? "Mark as Unpaid" : "Mark as Paid"}
+          </Button>
+          {!record.hasPaid && (
             <Button
-              variant={isPaid ? "destructive" : "default"}
-              onClick={() => onPaymentStatusChange(row.original.id, !isPaid)}
+              variant="outline"
+              onClick={() => handleAbsentStatusChange(record.id, true)}
             >
-              {isPaid ? "Mark as Unpaid" : "Mark as Paid"}
-            </Button>
-          )}
-          {!isPaid && (
-            <Button
-              variant={isAbsent ? "destructive" : "outline"}
-              onClick={() => onAbsentStatusChange(row.original.id, !isAbsent)}
-            >
-              {isAbsent ? "Mark as Present" : "Mark as Absent"}
+              Mark as Absent
             </Button>
           )}
         </div>

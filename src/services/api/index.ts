@@ -107,18 +107,6 @@ export const assignTeacherToClass = async (
   }
 };
 /**
- * Update records amount
- */
-export const updateRecordsAmount = async (amount: number) => {
-  try {
-    const response = await apiClient.put("/settings/amount", { amount });
-    return response.data;
-  } catch (error) {
-    console.error("Error updating records amount:", error);
-    throw error;
-  }
-};
-/**
  * Update class
  */
 export const updateClass = async (data: Class) => {
@@ -169,7 +157,7 @@ export const createClass = async (data: {
 export const fetchStudents = async () => {
   try {
     const response = await apiClient.get("/students");
-    return response.data.students;
+    return response.data;
   } catch (error) {
     console.error("Error fetching students:", error);
     throw error;
@@ -229,11 +217,14 @@ export const createStudent = async (data: Student) => {
 };
 
 /**
- * Fetch all records.
+ * Fetch all records of a class by date.
  */
-export const fetchRecords = async () => {
+export const fetchRecordsByClassAndDate = async (
+  classId: number,
+  date: string
+) => {
   try {
-    const response = await apiClient.get("/records");
+    const response = await apiClient.get(`/records/${classId}?date=${date}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching records:", error);
@@ -242,20 +233,45 @@ export const fetchRecords = async () => {
 };
 
 /**
- * Create a new record.
- * @param data - Record creation data.
+ * Submit a student record.
  */
-export const createRecord = async (data: {
+export const submitStudentRecord = async (data: {
   amount: number;
-  submiter_email: string;
-  student_name: string;
-  isPrepaid: boolean;
+  payedBy: number;
+  hasPaid: boolean;
+  submitedBy: number;
+  classId: number;
 }) => {
   try {
     const response = await apiClient.post("/records", data);
     return response.data;
   } catch (error) {
-    console.error("Error creating record:", error);
+    console.error("Error submitting student record:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get preset amount.
+ */
+export const getPresetAmount = async () => {
+  try {
+    const response = await apiClient.get("/preset-amount");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching preset amount:", error);
+    throw error;
+  }
+};
+
+/**
+ *  Update settings amount */
+export const updateRecordsAmount = async (data: RecordsAmount) => {
+  try {
+    const response = await apiClient.put("/settings/amount", data);
+    return response.data;
+  } catch (error) {
+    console.log("Error updating preset amount");
     throw error;
   }
 };

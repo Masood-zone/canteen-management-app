@@ -76,13 +76,14 @@ type RecordsAmount = {
 };
 
 type Teacher = {
-  id: number;
+  id?: number;
   name: string;
   phone: string;
   assigned_class?: {
     id: number;
     name: string;
   };
+  role: string;
   email: string;
   gender: "male" | "female";
   password?: string;
@@ -114,3 +115,19 @@ interface ProtectedRouteProps {
   children: ReactNode;
   roles?: string[];
 }
+
+type CanteenRecord = {
+  id: number;
+  amount: number;
+  submitedAt: string;
+  submitedBy: number;
+  payedBy: number | null;
+  isPrepaid: boolean;
+  hasPaid: boolean;
+  classId: number;
+  student: {
+    id: number;
+    firstName: string;
+    lastName: string;
+  } | null;
+};

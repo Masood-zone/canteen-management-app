@@ -370,6 +370,46 @@ const rootRoutes = createBrowserRouter(
             }}
           />
         </Route>
+        {/* Settings */}
+        <Route
+          path="settings"
+          lazy={async () => {
+            const { default: SettingsLayout } = await import(
+              "@/pages/teacher/settings/index.tsx"
+            );
+            return { Component: SettingsLayout };
+          }}
+        >
+          <Route
+            index
+            lazy={async () => {
+              const { default: Settings } = await import(
+                "@/pages/teacher/settings/settings.tsx"
+              );
+              return { Component: Settings };
+            }}
+          />
+          {/* Profile */}
+          <Route
+            path="profile"
+            lazy={async () => {
+              const { default: Profile } = await import(
+                "@/pages/teacher/settings/profile/profile.tsx"
+              );
+              return { Component: Profile };
+            }}
+          />
+          {/* Canteen */}
+          <Route
+            path="canteen"
+            lazy={async () => {
+              const { default: Canteen } = await import(
+                "@/pages/teacher/settings/canteen/canteen.tsx"
+              );
+              return { Component: Canteen };
+            }}
+          />
+        </Route>
         <Route
           path="students"
           lazy={async () => {

@@ -19,13 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateStudent, useFetchClasses } from "@/services/api/queries";
+import { useCreateStudent } from "@/services/api/queries";
+import { useAuthStore } from "@/store/authStore";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 export default function AddStudent() {
+  const { assigned_class } = useAuthStore();
   const { mutate: createStudent, isLoading } = useCreateStudent();
-  const { data: classList } = useFetchClasses();
   const {
     register,
     handleSubmit,
@@ -34,13 +35,13 @@ export default function AddStudent() {
     watch,
   } = useForm<Student>();
   const gender = watch("gender");
-  const classId = watch("classId");
+  const teacherClass = assigned_class;
   const onSubmit = async (data: Student) => {
     try {
       await createStudent({
         ...data,
         age: Number(data.age),
-        classId: Number(data.classId),
+        classId: Number(teacherClass?.id),
       });
     } catch (error) {
       console.error("Error creating student:", error);
@@ -56,7 +57,7 @@ export default function AddStudent() {
             <GoBackButton />
           </CardTitle>
           <CardDescription>
-            <p>Register a new student to the platform</p>
+            <p>Register a student for {`${teacherClass?.name}`}</p>
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -85,37 +86,11 @@ export default function AddStudent() {
                 id="parentPhone"
                 {...register("parentPhone", { required: true })}
                 autoComplete="off"
-                placeholder="Student's last name"
+                placeholder="Student's Parent Contact"
                 className="bg-transparent"
                 required
               />
               {errors.parentPhone && (
-                <p className="text-red-500 text-sm">This field is required</p>
-              )}
-            </div>
-            {/* Class */}
-            <div className="space-y-2">
-              <Label htmlFor="class">Class</Label>
-              <Select
-                value={classId?.toString()}
-                onValueChange={(value) =>
-                  setValue("classId", value, {
-                    shouldValidate: true,
-                  })
-                }
-              >
-                <SelectTrigger name="class" className="bg-transparent">
-                  <SelectValue placeholder="Select class" />
-                </SelectTrigger>
-                <SelectContent>
-                  {classList?.map((item: Class) => (
-                    <SelectItem key={item.id} value={item.id.toString()}>
-                      {item.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.classId && (
                 <p className="text-red-500 text-sm">This field is required</p>
               )}
             </div>

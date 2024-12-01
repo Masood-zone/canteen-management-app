@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCreateTeacher } from "@/services/api/queries";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 export default function AddTeacher() {
@@ -33,9 +33,17 @@ export default function AddTeacher() {
     watch,
   } = useForm<Teacher>();
   const gender = watch("gender");
-  const onSubmit = async (data: Teacher) => {
+  const onSubmit: SubmitHandler<Teacher> = async (data) => {
+    const teacherData = {
+      name: data.name,
+      email: data.email,
+      gender: gender,
+      phone: data.phone,
+      password: data.password,
+      role: "TEACHER",
+    };
     try {
-      await createTeacher(data);
+      await createTeacher(teacherData);
     } catch (error) {
       console.error(error);
     }

@@ -26,11 +26,13 @@ const ActionMenu = ({
   resourceName,
   onDelete,
   hasEdit = true,
+  hasDelete = true,
 }: {
   id: string | number;
   resourceName: string;
   onDelete: (id: string | number) => void;
   hasEdit?: boolean;
+  hasDelete?: boolean;
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,39 +70,41 @@ const ActionMenu = ({
             <Link to={`${id}/edit`}>Edit {resourceName}</Link>
           </DropdownMenuItem>
         )}
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <DropdownMenuItem
-              className="bg-red-500 hover:bg-red-600 text-white"
-              onSelect={(e) => e.preventDefault()}
-            >
-              Delete {resourceName}
-            </DropdownMenuItem>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription className="text-base">
-                This action cannot be undone. This will permanently delete the
-                user data for the{" "}
-                <span className="font-bold text-black">
-                  {resourceName + " " + id}
-                </span>{" "}
-                and remove their data.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="bg-red-500 hover:bg-red-600"
+        {hasDelete && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <DropdownMenuItem
+                className="bg-red-500 hover:bg-red-600 text-white"
+                onSelect={(e) => e.preventDefault()}
               >
-                {isDeleting ? "Deleting..." : "Delete"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+                Delete {resourceName}
+              </DropdownMenuItem>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription className="text-base">
+                  This action cannot be undone. This will permanently delete the
+                  user data for the{" "}
+                  <span className="font-bold text-black">
+                    {resourceName + " " + id}
+                  </span>{" "}
+                  and remove their data.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="bg-red-500 hover:bg-red-600"
+                >
+                  {isDeleting ? "Deleting..." : "Delete"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
