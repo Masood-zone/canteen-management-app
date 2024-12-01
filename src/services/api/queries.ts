@@ -337,7 +337,7 @@ export const useUpdateRecordsAmount = () => {
  */
 export const useSubmitStudentRecord = () => {
   const queryClient = useQueryClient();
-  return useMutation(submitStudentRecord, {
+  return useMutation((data: StudentRecord) => submitStudentRecord(data), {
     onSuccess: () => {
       toast.success("Record submitted successfully!");
       queryClient.invalidateQueries(["records"]);

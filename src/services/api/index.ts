@@ -235,13 +235,7 @@ export const fetchRecordsByClassAndDate = async (
 /**
  * Submit a student record.
  */
-export const submitStudentRecord = async (data: {
-  amount: number;
-  payedBy: number;
-  hasPaid: boolean;
-  submitedBy: number;
-  classId: number;
-}) => {
+export const submitStudentRecord = async (data: StudentRecord) => {
   try {
     const response = await apiClient.post("/records", data);
     return response.data;

@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { CanteenTable } from "@/components/tables/canteen-table";
 import { columns } from "./columns";
@@ -12,7 +10,7 @@ import { useAuthStore } from "@/store/authStore";
 import { TableSkeleton } from "@/components/shared/page-loader/loaders";
 
 export default function CanteenList() {
-  const { user, assigned_class } = useAuthStore();
+  const { assigned_class } = useAuthStore();
   const classId = assigned_class?.id ?? 0;
   const today = new Date().toISOString().split("T")[0];
 
@@ -22,11 +20,12 @@ export default function CanteenList() {
     error,
   } = useFetchRecordsByClassAndDate(classId, today);
 
-  const submitRecord = useSubmitStudentRecord();
-
   const [unpaidRecords, setUnpaidRecords] = useState([]);
   const [paidRecords, setPaidRecords] = useState([]);
   const [absentRecords, setAbsentRecords] = useState([]);
+  const [updatingStudentId, setUpdatingStudentId] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     if (records) {
@@ -36,12 +35,54 @@ export default function CanteenList() {
     }
   }, [records]);
 
-  const handlePaymentStatusChange = async (id: number, isPaid: boolean) => {
-    console.log("handlePaymentStatusChange", id, isPaid);
+  const { mutate: submitRecord } = useSubmitStudentRecord();
+
+  const handlePaymentStatusChange = async (
+    id: number,
+    isPaid: boolean,
+    record: StudentRecord
+  ) => {
+    setUpdatingStudentId(id);
+    try {
+      const recordToUpdate = record;
+      await submitRecord({
+        amount: recordToUpdate.settingsAmount ?? 0,
+        submitedBy: recordToUpdate.submitedBy,
+        payedBy: recordToUpdate.payedBy,
+        isPrepaid: recordToUpdate.isPrepaid,
+        hasPaid: isPaid,
+        classId: recordToUpdate.classId,
+        isAbsent: recordToUpdate.isAbsent,
+      });
+    } catch (error) {
+      console.error(`There was an error updating student record`, error);
+    } finally {
+      setUpdatingStudentId(null);
+    }
   };
 
-  const handleAbsentStatusChange = (id: number, isAbsent: boolean) => {
-    console.log("handleAbsentStatusChange", id, isAbsent);
+  const handleAbsentStatusChange = async (id: number, isAbsent: boolean) => {
+    setUpdatingStudentId(id);
+    try {
+      const recordToUpdate = unpaidRecords.find(
+        (record: CanteenRecord) => record.id === id.toString()
+      ) as StudentRecord | undefined;
+      if (recordToUpdate) {
+        await submitRecord({
+          amount: recordToUpdate?.settingsAmount ?? 0,
+          submitedBy: recordToUpdate?.submitedBy,
+          payedBy: recordToUpdate?.payedBy,
+          isPrepaid: recordToUpdate?.isPrepaid,
+          hasPaid: false,
+          classId: recordToUpdate?.classId,
+          isAbsent: isAbsent,
+        });
+      }
+    } catch (error) {
+      console.error(`There was an error marking student as absent`, error);
+    } finally {
+      setUpdatingStudentId(null);
+    }
   };
 
   if (isLoading) return <TableSkeleton />;
@@ -56,23 +97,35 @@ export default function CanteenList() {
       </TabsList>
       <TabsContent value="unpaid">
         <CanteenTable
-          columns={columns(handlePaymentStatusChange, handleAbsentStatusChange)}
+          columns={columns(
+            handlePaymentStatusChange,
+            handleAbsentStatusChange,
+            updatingStudentId
+          )}
           data={unpaidRecords}
-          searchField="student.name"
+          searchField="student"
         />
       </TabsContent>
       <TabsContent value="paid">
         <CanteenTable
-          columns={columns(handlePaymentStatusChange, handleAbsentStatusChange)}
+          columns={columns(
+            handlePaymentStatusChange,
+            handleAbsentStatusChange,
+            updatingStudentId
+          )}
           data={paidRecords}
-          searchField="student.name"
+          searchField="student"
         />
       </TabsContent>
       <TabsContent value="absent">
         <CanteenTable
-          columns={columns(handlePaymentStatusChange, handleAbsentStatusChange)}
+          columns={columns(
+            handlePaymentStatusChange,
+            handleAbsentStatusChange,
+            updatingStudentId
+          )}
           data={absentRecords}
-          searchField="student.name"
+          searchField="student"
         />
       </TabsContent>
     </Tabs>

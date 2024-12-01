@@ -1,46 +1,49 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
 
-// Define the type for our record based on the provided structure
 type CanteenRecord = {
   id: number;
-  amount: number;
+  settingsAmount: number;
   submitedAt: string;
   submitedBy: number;
   payedBy: number | null;
   isPrepaid: boolean;
   hasPaid: boolean;
+  isAbsent: boolean;
   classId: number;
   student: {
     id: number;
-    firstName: string;
-    lastName: string;
+    name: string;
   } | null;
 };
 
 export const columns = (
-  handlePaymentStatusChange: (id: number, isPaid: boolean) => void,
-  handleAbsentStatusChange: (id: number, isAbsent: boolean) => void
+  handlePaymentStatusChange: (
+    id: number,
+    isPaid: boolean,
+    record: StudentRecord
+  ) => Promise<void>,
+  handleAbsentStatusChange: (id: number, isAbsent: boolean) => Promise<void>,
+  updatingStudentId: number | null
 ): ColumnDef<CanteenRecord>[] => [
   {
     accessorKey: "student",
     header: "Student Name",
     cell: ({ row }) => {
       const student = row.original.student;
-      return student ? `${student.firstName} ${student.lastName}` : "N/A";
+      return student ? `${student.name}` : "N/A";
     },
   },
   {
-    accessorKey: "amount",
+    accessorKey: "settingsAmount",
     header: "Amount",
-    cell: ({ row }) => `₵${row.original.amount.toFixed(2)}`,
+    cell: ({ row }) => `₵${row.original.settingsAmount.toFixed(2)}`,
   },
   {
     accessorKey: "submitedAt",
-    header: "Submitted At",
+    header: "Date",
     cell: ({ row }) => format(new Date(row.original.submitedAt), "PPp"),
   },
   {
@@ -57,22 +60,36 @@ export const columns = (
     id: "actions",
     cell: ({ row }) => {
       const record = row.original;
+      const isUpdating = updatingStudentId === record.id;
+
       return (
         <div className="flex space-x-2">
           <Button
             variant={record.hasPaid ? "destructive" : "default"}
             onClick={() =>
-              handlePaymentStatusChange(record.id, !record.hasPaid)
+              handlePaymentStatusChange(record.id, !record.hasPaid, record)
             }
+            disabled={isUpdating}
           >
-            {record.hasPaid ? "Mark as Unpaid" : "Mark as Paid"}
+            {isUpdating ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : record.hasPaid ? (
+              "Mark as Unpaid"
+            ) : (
+              "Mark as Paid"
+            )}
           </Button>
-          {!record.hasPaid && (
+          {!record.hasPaid && !record.isAbsent && (
             <Button
               variant="outline"
               onClick={() => handleAbsentStatusChange(record.id, true)}
+              disabled={isUpdating}
             >
-              Mark as Absent
+              {isUpdating ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Mark as Absent"
+              )}
             </Button>
           )}
         </div>

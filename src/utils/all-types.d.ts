@@ -131,3 +131,15 @@ type CanteenRecord = {
     lastName: string;
   } | null;
 };
+
+type StudentRecord = {
+  id?: number;
+  amount?: number;
+  payedBy: number | null;
+  isPrepaid: boolean;
+  hasPaid: boolean;
+  submitedBy: number;
+  classId: number;
+  settingsAmount?: number;
+  isAbsent: boolean;
+};
