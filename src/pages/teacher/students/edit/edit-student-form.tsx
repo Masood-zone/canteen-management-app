@@ -136,8 +136,8 @@ export default function EditStudentForm({
         <Button type="submit" className="w-full" disabled={isLoading}>
           <ButtonLoader
             isPending={isLoading}
-            fallback="Update Teacher"
-            loadingText="Updating Teacher..."
+            fallback="Update Student"
+            loadingText="Updating Student..."
           />
         </Button>
       </CardContent>

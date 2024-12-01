@@ -23,9 +23,9 @@ export default function ViewStudent() {
     error,
   } = useFetchStudent(Number(id) as number);
   const { data: classData, isLoading: classLoader } = useFetchClassById(
-    Number(id)
+    Number(studentData?.classId)
   );
-  const student = studentData?.student;
+  const student = studentData;
   const teacher = user?.user;
   return (
     <section className="w-full space-y-5">

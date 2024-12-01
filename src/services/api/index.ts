@@ -126,7 +126,7 @@ export const updateClass = async (data: Class) => {
 export const fetchClassByName = async (id: number) => {
   try {
     const response = await apiClient.get(`/classes/${id}`);
-    return response.data?.current_class;
+    return response.data;
   } catch (error) {
     console.error("Error fetching class by name:", error);
     throw error;
@@ -170,7 +170,7 @@ export const fetchStudents = async () => {
 export const fetchStudentsInClass = async (id: number) => {
   try {
     const response = await apiClient.get(`/students/class/${id}`);
-    return response.data.students;
+    return response.data;
   } catch (error) {
     console.error("Error fetching students in class:", error);
     throw error;

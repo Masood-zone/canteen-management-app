@@ -14,7 +14,7 @@ import { toast } from "sonner";
 export default function EditStudent() {
   const { id } = useParams();
   const { data: student, error } = useFetchStudent(Number(id)) as {
-    data: { student: Student };
+    data: Student;
     error: { message: string };
   };
   const { data: classList, error: classListError } = useFetchClasses();
@@ -41,10 +41,7 @@ export default function EditStudent() {
         {error ? (
           <p>{error.message}</p>
         ) : (
-          <EditStudentForm
-            studentData={student?.student}
-            classList={classList}
-          />
+          <EditStudentForm studentData={student} classList={classList} />
         )}
       </Card>
     </section>

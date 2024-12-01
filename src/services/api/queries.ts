@@ -265,10 +265,10 @@ export const useCreateStudent = () => {
   return useMutation((data: Student) => createStudent(data), {
     onSuccess: () => {
       toast.success("Student created successfully!");
+      //Navigate to the students page after creating a student
+      navigate(-1); //Temporal fix
       // Invalidate the query to refresh the table
       queryClient.invalidateQueries(["students"]);
-      //Navigate to the students page after creating a student
-      navigate("/admin/students");
     },
     onError: (error) => {
       console.error(error);
@@ -288,7 +288,7 @@ export const useUpdateStudent = () => {
       // Invalidate the query to refresh the table
       queryClient.invalidateQueries(["students"]);
       //Navigate to the students page after updating a student
-      navigate("/admin/students");
+      navigate(-1); //Temporal fix
     },
     onError: (error) => {
       console.error(error);
