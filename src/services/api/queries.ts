@@ -22,6 +22,7 @@ import {
   paidStudentRecordsByClassAndDate,
   absentStudentRecordsByClassAndDate,
   updateStudentStatus,
+  fetchClass,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -89,6 +90,18 @@ export const useFetchStudentsByClass = (id: number) => {
     onError: (error) => {
       console.error(error);
       toast.error("Failed to fetch students in this class.");
+    },
+  });
+};
+
+/**
+ * Query: Fetch class by id.
+ */
+export const useFetchClassById = (id: number) => {
+  return useQuery(["classes", id], () => fetchClass(id), {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch class.");
     },
   });
 };

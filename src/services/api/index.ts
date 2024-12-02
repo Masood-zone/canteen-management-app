@@ -119,6 +119,19 @@ export const createClass = async (data: {
 };
 
 /**
+ * Fetch class by id.
+ */
+export const fetchClass = async (id: number) => {
+  try {
+    const response = await apiClient.get(`/classes/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching class:", error);
+    throw error;
+  }
+};
+
+/**
  * Fetch all students.
  */
 export const fetchStudents = async () => {
