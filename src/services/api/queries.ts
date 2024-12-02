@@ -192,6 +192,60 @@ export const useUpdateTeacher = () => {
   });
 };
 
+/*
+ * Query: Fetch teacher records summary
+ */
+export const useFetchTeacherRecordsSummary = (
+  startDate: Date,
+  endDate: Date
+) => {
+  return useQuery(
+    ["teacherRecordsSummary", startDate, endDate],
+    async () => {
+      const response = await apiClient.get("/teachers/summary", {
+        params: {
+          from: startDate.toISOString(),
+          to: endDate.toISOString(),
+        },
+      });
+      return response.data;
+    },
+    {
+      onError: (error) => {
+        console.error(error);
+        // Handle error (e.g., show a toast notification)
+      },
+    }
+  );
+};
+/*
+ * Query: Fetch a teacher record detail
+ */
+export const useFetchTeacherRecordsDetail = (
+  teacherId: number,
+  startDate: Date,
+  endDate: Date
+) => {
+  return useQuery(
+    ["teacherRecordsDetail", teacherId, startDate, endDate],
+    async () => {
+      const response = await apiClient.get(`/teachers/${teacherId}/detail`, {
+        params: {
+          from: startDate.toISOString(),
+          to: endDate.toISOString(),
+        },
+      });
+      return response.data;
+    },
+    {
+      onError: (error) => {
+        console.error(error);
+        // Handle error (e.g., show a toast notification)
+      },
+    }
+  );
+};
+
 /**
  * Mutation: Create a new class.
  */

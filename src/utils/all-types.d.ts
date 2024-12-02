@@ -133,3 +133,9 @@ interface AdminAnalytics {
   totalCollections: number;
   totalClasses: number;
 }
+
+interface TeacherRecord {
+  id: number;
+  name: string;
+  totalAmount: number;
+}

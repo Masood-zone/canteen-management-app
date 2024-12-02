@@ -75,6 +75,10 @@ export const updateTeacher = async (data: Teacher) => {
   }
 };
 /**
+ * Fetch teacher records by date range.
+ */
+
+/**
  * Fetch all classes.
  */
 export const fetchClasses = async () => {
