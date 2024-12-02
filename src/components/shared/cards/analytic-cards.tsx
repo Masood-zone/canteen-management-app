@@ -10,6 +10,7 @@ import { Info } from "lucide-react";
 interface AnalyticsCardProps {
   title: string;
   value: number | string;
+  secondaryValue?: string;
   icon: React.ReactNode;
   notice?: string;
 }
@@ -17,6 +18,7 @@ interface AnalyticsCardProps {
 export function AnalyticsCard({
   title,
   value,
+  secondaryValue,
   icon,
   notice,
 }: AnalyticsCardProps) {
@@ -28,6 +30,9 @@ export function AnalyticsCard({
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
+        {secondaryValue && (
+          <div className="text-sm text-muted-foreground">{secondaryValue}</div>
+        )}
       </CardContent>
       {notice && (
         <CardFooter>
