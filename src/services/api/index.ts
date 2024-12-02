@@ -308,3 +308,15 @@ export const updateRecordsAmount = async (data: RecordsAmount) => {
     throw error;
   }
 };
+
+// Analytics
+// Fetch teacher analytics
+export const fetchTeacherAnalytics = async (classId: number) => {
+  try {
+    const response = await apiClient.get(`/analytics/teachers/${classId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teacher analytics:", error);
+    throw error;
+  }
+};

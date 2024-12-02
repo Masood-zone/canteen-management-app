@@ -23,6 +23,7 @@ import {
   absentStudentRecordsByClassAndDate,
   updateStudentStatus,
   fetchClass,
+  fetchTeacherAnalytics,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -397,6 +398,18 @@ export const useGetPresetAmount = () => {
     onError: (error) => {
       console.error(error);
       toast.error("Failed to fetch preset amount.");
+    },
+  });
+};
+
+/**
+ * Query: Teacher's Analytics
+ */
+export const useTeacherAnalytics = (id: number) => {
+  return useQuery(["teacherAnalytics", id], () => fetchTeacherAnalytics(id), {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch teacher analytics.");
     },
   });
 };
