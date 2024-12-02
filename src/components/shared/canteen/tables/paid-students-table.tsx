@@ -39,6 +39,21 @@ export default function PaidStudentsTable() {
     }
   };
 
+  const handleUpdateToAbsent = async (record: CanteenRecord) => {
+    const confirm = window.confirm(
+      `Are you sure you want to mark ${record.student?.name} as absent?`
+    );
+    if (!confirm) return;
+    try {
+      await updateToPaid({
+        ...record,
+        isAbsent: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //   Loading and error states
   if (isLoading) return <TableSkeleton />;
   if (error) return <div>Error fetching unpaid students</div>;
@@ -92,7 +107,12 @@ export default function PaidStudentsTable() {
               />
             </Button>
             {!record.hasPaid && !record.isAbsent && (
-              <Button variant="outline">Mark as Absent</Button>
+              <Button
+                variant="outline"
+                onClick={() => handleUpdateToAbsent(record)}
+              >
+                Mark as Absent
+              </Button>
             )}
           </div>
         );
