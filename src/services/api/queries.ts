@@ -25,6 +25,7 @@ import {
   fetchClass,
   fetchTeacherAnalytics,
   generateDailyRecordsForAClass,
+  fetchAdminAnalytics,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -418,6 +419,17 @@ export const useGetPresetAmount = () => {
   });
 };
 
+/**
+ * Query: Admin's Analytics
+ */
+export const useAdminDashboardAnalytics = () => {
+  return useQuery(["adminAnalytics"], fetchAdminAnalytics, {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch admin analytics.");
+    },
+  });
+};
 /**
  * Query: Teacher's Analytics
  */

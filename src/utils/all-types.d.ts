@@ -126,3 +126,10 @@ type StudentRecord = {
   settingsAmount?: number;
   isAbsent: boolean;
 };
+
+interface AdminAnalytics {
+  totalTeachers: number;
+  totalStudents: number;
+  totalCollections: number;
+  totalClasses: number;
+}
