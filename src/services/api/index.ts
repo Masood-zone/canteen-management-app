@@ -285,19 +285,6 @@ export const updateStudentStatus = async (data: StudentRecord) => {
 };
 
 /**
- * Generate daily records for a class.
- */
-export const generateDailyRecordsForAClass = async (classId: number) => {
-  try {
-    const response = await apiClient.get(`/records/generate-daily/${classId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error generating daily records:", error);
-    throw error;
-  }
-};
-
-/**
  * Get preset amount.
  */
 export const getPresetAmount = async () => {

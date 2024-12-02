@@ -24,7 +24,6 @@ import {
   updateStudentStatus,
   fetchClass,
   fetchTeacherAnalytics,
-  generateDailyRecordsForAClass,
   fetchAdminAnalytics,
 } from "@/services/api";
 import { apiClient } from "../root";
@@ -388,21 +387,6 @@ export const useUpdateStudentStatus = () => {
     onError: (error) => {
       console.error(error);
       toast.error("Failed to submit record.");
-    },
-  });
-};
-
-/**
- * Query: Generate daily records for a class.
- */
-export const useGenerateDailyRecordsForClass = (id: number) => {
-  return useMutation(() => generateDailyRecordsForAClass(id), {
-    onSuccess: () => {
-      toast.success("Daily records generated successfully!");
-    },
-    onError: (error) => {
-      console.error(error);
-      toast.error("Failed to generate daily records.");
     },
   });
 };

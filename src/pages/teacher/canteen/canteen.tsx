@@ -20,25 +20,11 @@ import {
   PaidStudentsTable,
   UnpaidStudentsTable,
 } from "./list/table";
-import { useGenerateDailyRecordsForClass } from "@/services/api/queries";
-import { useEffect } from "react";
 
 export default function Canteen() {
   const navigate = useNavigate();
   const { user, assigned_class } = useAuthStore();
   const teacher = user?.user;
-  const { isSuccess, isError } = useGenerateDailyRecordsForClass(
-    assigned_class?.id ?? 0
-  );
-
-  useEffect(() => {
-    if (isSuccess) {
-      console.log("Daily records generated successfully");
-    }
-    if (isError) {
-      console.error("Error generating daily records");
-    }
-  }, [isSuccess, isError]);
 
   return (
     <section className="container mx-auto py-10">
