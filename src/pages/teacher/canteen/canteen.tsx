@@ -14,7 +14,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
-import CanteenList from "./list/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AbsentStudentsTable,
+  PaidStudentsTable,
+  UnpaidStudentsTable,
+} from "./list/table";
 
 export default function Canteen() {
   const navigate = useNavigate();
@@ -58,7 +63,24 @@ export default function Canteen() {
         </div>
       </div>
       {/* Canteen tables */}
-      <CanteenList />
+      <div>
+        <Tabs defaultValue="unpaid" className="w-full">
+          <TabsList>
+            <TabsTrigger value="unpaid">Unpaid Students</TabsTrigger>
+            <TabsTrigger value="paid">Paid Students</TabsTrigger>
+            <TabsTrigger value="absent">Absent Students</TabsTrigger>
+          </TabsList>
+          <TabsContent value="unpaid">
+            <UnpaidStudentsTable />
+          </TabsContent>
+          <TabsContent value="paid">
+            <PaidStudentsTable />
+          </TabsContent>
+          <TabsContent value="absent">
+            <AbsentStudentsTable />
+          </TabsContent>
+        </Tabs>
+      </div>
     </section>
   );
 }

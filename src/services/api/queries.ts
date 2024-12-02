@@ -2,8 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   fetchClasses,
-  assignTeacherToClass,
-  fetchClassByName,
   createClass,
   fetchStudents,
   createStudent,
@@ -18,9 +16,12 @@ import {
   fetchRecordsAmount,
   fetchStudentsInClass,
   getPresetAmount,
-  submitStudentRecord,
   fetchRecordsByClassAndDate,
   updateRecordsAmount,
+  unpaidStudentRecordsByClassAndDate,
+  paidStudentRecordsByClassAndDate,
+  absentStudentRecordsByClassAndDate,
+  updateStudentStatus,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -65,18 +66,6 @@ export const useFetchClasses = () => {
     onError: (error) => {
       console.error(error);
       toast.error("Failed to fetch classes.");
-    },
-  });
-};
-/**
- * Query: Fetch details of a class by name.
- */
-export const useFetchClassById = (id: number) => {
-  return useQuery(["classes", id], () => fetchClassByName(id), {
-    enabled: !!id, // Ensure query runs only if id is provided
-    onError: (error) => {
-      console.error(error);
-      toast.error("Failed to fetch class details.");
     },
   });
 };
@@ -186,29 +175,6 @@ export const useUpdateTeacher = () => {
       toast.error("Failed to update teacher. Please try again.");
     },
   });
-};
-/**
- * Mutation: Assign a teacher to a class.
- */
-export const useAssignTeacher = () => {
-  return useMutation(
-    ({
-      className,
-      teacherEmail,
-    }: {
-      className: string;
-      teacherEmail: string;
-    }) => assignTeacherToClass(className, teacherEmail),
-    {
-      onSuccess: () => {
-        toast.success("Teacher assigned successfully!");
-      },
-      onError: (error) => {
-        console.error(error);
-        toast.error("Failed to assign teacher. Please try again.");
-      },
-    }
-  );
 };
 
 /**
@@ -332,15 +298,76 @@ export const useUpdateRecordsAmount = () => {
     },
   });
 };
+
 /**
- * Mutation: Submit a student record.
+ * Query: Get all unpaid students by class and date.
  */
-export const useSubmitStudentRecord = () => {
+export const useUnpaidStudentRecordsByClassAndDate = (
+  classId: number,
+  date: string
+) => {
+  return useQuery(
+    ["unpaidRecords", classId, date],
+    () => unpaidStudentRecordsByClassAndDate(classId, date),
+    {
+      onError: (error) => {
+        console.error(error);
+        toast.error("Failed to fetch unpaid records.");
+      },
+    }
+  );
+};
+
+/**
+ * Query: Get all paid students by class and date.
+ */
+export const usePaidStudentRecordsByClassAndDate = (
+  classId: number,
+  date: string
+) => {
+  return useQuery(
+    ["paidRecords", classId, date],
+    () => paidStudentRecordsByClassAndDate(classId, date),
+    {
+      onError: (error) => {
+        console.error(error);
+        toast.error("Failed to fetch paid records.");
+      },
+    }
+  );
+};
+
+/**
+ * Query: Get all absent students by class and date.
+ */
+export const useAbsentStudentRecordsByClassAndDate = (
+  classId: number,
+  date: string
+) => {
+  return useQuery(
+    ["absentRecords", classId, date],
+    () => absentStudentRecordsByClassAndDate(classId, date),
+    {
+      onError: (error) => {
+        console.error(error);
+        toast.error("Failed to fetch absent records.");
+      },
+    }
+  );
+};
+
+/**
+ * Mutation: Update a student status.
+ *
+ */
+export const useUpdateStudentStatus = () => {
   const queryClient = useQueryClient();
-  return useMutation((data: StudentRecord) => submitStudentRecord(data), {
+  return useMutation((data: StudentRecord) => updateStudentStatus(data), {
     onSuccess: () => {
       toast.success("Record submitted successfully!");
-      queryClient.invalidateQueries(["records"]);
+      queryClient.invalidateQueries(["unpaidRecords"]);
+      queryClient.invalidateQueries(["paidRecords"]);
+      queryClient.invalidateQueries(["absentRecords"]);
     },
     onError: (error) => {
       console.error(error);

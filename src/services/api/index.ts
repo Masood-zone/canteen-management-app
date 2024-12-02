@@ -88,25 +88,6 @@ export const fetchClasses = async () => {
 };
 
 /**
- * Assign a teacher to a class.
- * @param className - Name of the class.
- * @param teacherEmail - Email of the teacher.
- */
-export const assignTeacherToClass = async (
-  className: string,
-  teacherEmail: string
-) => {
-  try {
-    const response = await apiClient.put(`/classes/${className}/assign`, {
-      teacher_email: teacherEmail,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error assigning teacher to class:", error);
-    throw error;
-  }
-};
-/**
  * Update class
  */
 export const updateClass = async (data: Class) => {
@@ -115,20 +96,6 @@ export const updateClass = async (data: Class) => {
     return response.data;
   } catch (error) {
     console.error("Error updating class:", error);
-    throw error;
-  }
-};
-
-/**
- * Fetch details of a specific class by name.
- * @param className - Name of the class.
- */
-export const fetchClassByName = async (id: number) => {
-  try {
-    const response = await apiClient.get(`/classes/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching class by name:", error);
     throw error;
   }
 };
@@ -233,14 +200,73 @@ export const fetchRecordsByClassAndDate = async (
 };
 
 /**
- * Submit a student record.
+ * Fetch all records of unpaid students.
  */
-export const submitStudentRecord = async (data: StudentRecord) => {
+export const unpaidStudentRecordsByClassAndDate = async (
+  classId: number,
+  date: string
+) => {
   try {
-    const response = await apiClient.post("/records", data);
+    const response = await apiClient.get(
+      `/records/${classId}/unpaid?date=${date}`
+    );
     return response.data;
   } catch (error) {
-    console.error("Error submitting student record:", error);
+    console.error("Error fetching unpaid records:", error);
+    throw error;
+  }
+};
+
+/**
+ * Fetch all records of paid students.
+ */
+export const paidStudentRecordsByClassAndDate = async (
+  classId: number,
+  date: string
+) => {
+  try {
+    const response = await apiClient.get(
+      `/records/${classId}/paid?date=${date}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching paid records:", error);
+    throw error;
+  }
+};
+
+/**
+ * Fetch all records of absent students.
+ */
+export const absentStudentRecordsByClassAndDate = async (
+  classId: number,
+  date: string
+) => {
+  try {
+    const response = await apiClient.get(
+      `/records/${classId}/absent?date=${date}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching absent records:", error);
+    throw error;
+  }
+};
+
+/**
+ * Update student status
+ * PUT /records/:id/status
+ * Body: {
+  "hasPaid": true,
+  "isAbsent": false
+}
+ */
+export const updateStudentStatus = async (data: StudentRecord) => {
+  try {
+    const response = await apiClient.put(`/records/${data?.id}/status`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating student status:", error);
     throw error;
   }
 };

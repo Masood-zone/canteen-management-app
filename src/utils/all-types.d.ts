@@ -13,24 +13,6 @@ interface ResetPasswordFormProps {
   confirmPassword: string;
 }
 
-type CanteenRecord = {
-  id: string;
-  student: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-  teacher: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-  date: Date;
-  amount: number;
-  paid: boolean;
-  absent: boolean;
-};
-
 // Real-time types
 interface User {
   token: string;
@@ -125,10 +107,11 @@ type CanteenRecord = {
   isPrepaid: boolean;
   hasPaid: boolean;
   classId: number;
+  settingsAmount: number;
+  isAbsent: boolean;
   student: {
     id: number;
-    firstName: string;
-    lastName: string;
+    name: string;
   } | null;
 };
 
