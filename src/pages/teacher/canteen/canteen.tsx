@@ -213,21 +213,21 @@ export default function Canteen() {
           <TabsContent value="unpaid">
             <CanteenTable
               columns={columns}
-              data={studentRecords?.unpaidStudents || []}
+              data={studentRecords || []}
               searchField="student.name"
             />
           </TabsContent>
           <TabsContent value="paid">
             <CanteenTable
               columns={columns}
-              data={studentRecords?.paidStudents || []}
+              data={studentRecords || []}
               searchField="student.name"
             />
           </TabsContent>
           <TabsContent value="absent">
             <CanteenTable
               columns={columns}
-              data={studentRecords?.absentStudents || []}
+              data={studentRecords || []}
               searchField="student.name"
             />
           </TabsContent>
