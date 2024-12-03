@@ -49,6 +49,9 @@ type Student = {
   age: number;
   classId: string | number;
   gender: "male" | "female";
+  hasPaid?: boolean;
+  amount?: number;
+  settingsAmount?: number;
 };
 
 type RecordsAmount = {

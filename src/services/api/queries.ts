@@ -33,9 +33,21 @@ import {
   createReference,
   updateReference,
   fetchReference,
+  fetchRecords,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
+/**
+ * Query: Fetch all records.
+ */
+export const useFetchRecords = () => {
+  return useQuery(["records"], fetchRecords, {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch records.");
+    },
+  });
+};
 /**
  * Query: Fetch records amount.
  */
@@ -232,10 +244,12 @@ export const useCreateExpense = () => {
  */
 export const useUpdateExpense = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   return useMutation((data: Expense) => updateExpense(data), {
     onSuccess: () => {
       queryClient.invalidateQueries(["expenses"]);
       toast.success("Expense updated successfully!");
+      navigate("/admin/expenses");
     },
     onError: (error) => {
       console.error(error);

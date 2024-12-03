@@ -1,7 +1,19 @@
 import { apiClient } from "../root";
 
 /**
- * Fetch records amount.
+ * Fetch all records.
+ */
+export const fetchRecords = async () => {
+  try {
+    const response = await apiClient.get("/records");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching records:", error);
+    throw error;
+  }
+};
+/**
+ * Fetch canteen amount.
  */
 export const fetchRecordsAmount = async () => {
   try {
