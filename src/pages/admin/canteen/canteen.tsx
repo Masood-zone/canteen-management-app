@@ -32,7 +32,7 @@ export default function CanteenRecords() {
   );
 
   const handleViewRecords = (teacherId: number) => {
-    navigate(`/admin/canteen-records/${teacherId}/record`, {
+    navigate(`/admin/canteen-records/${teacherId}/records`, {
       state: { dateRange: date },
     });
   };

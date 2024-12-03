@@ -307,7 +307,7 @@ const rootRoutes = createBrowserRouter(
             }}
           />
           <Route
-            path=":/teacherId/record"
+            path=":teacherId/records"
             lazy={async () => {
               const { default: TeacherRecordsDetail } = await import(
                 "@/pages/admin/canteen/details/records-detail.tsx"
