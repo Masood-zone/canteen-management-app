@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { format } from "date-fns";
 import {
   usePaidStudentRecordsByClassAndDate,
   useUpdateStudentStatus,
@@ -8,31 +10,46 @@ import { Button } from "@/components/ui/button";
 import ButtonLoader from "../../button-loader/button-loader";
 import { ColumnDef } from "@tanstack/react-table";
 import { CanteenTable } from "@/components/tables/canteen-table";
-import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function PaidStudentsTable() {
   const { assigned_class } = useAuthStore();
   const classId = assigned_class?.id ?? 0;
-  const today = new Date().toISOString().split("T")[0];
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
+
   const {
     data: paid_students,
     isLoading,
     error,
-  } = usePaidStudentRecordsByClassAndDate(classId, today);
+  } = usePaidStudentRecordsByClassAndDate(
+    classId,
+    selectedDate?.toISOString().split("T")[0] ?? ""
+  );
 
-  //   Update student status
   const { mutate: updateToPaid, isLoading: updatingLoader } =
     useUpdateStudentStatus();
 
   const handleUpdateToPaid = async (record: CanteenRecord) => {
     const confirm = window.confirm(
-      `Are you sure you want to mark ${record.student?.name} as un-paid?`
+      `Are you sure you want to mark ${
+        record.student?.name
+      } as un-paid for ${format(selectedDate!, "PP")}?`
     );
     if (!confirm) return;
     try {
       await updateToPaid({
         ...record,
         hasPaid: false,
+        date: selectedDate?.toISOString().split("T")[0] ?? "",
       });
     } catch (error) {
       console.log(error);
@@ -41,24 +58,25 @@ export default function PaidStudentsTable() {
 
   const handleUpdateToAbsent = async (record: CanteenRecord) => {
     const confirm = window.confirm(
-      `Are you sure you want to mark ${record.student?.name} as absent?`
+      `Are you sure you want to mark ${
+        record.student?.name
+      } as absent for ${format(selectedDate!, "PP")}?`
     );
     if (!confirm) return;
     try {
       await updateToPaid({
         ...record,
         isAbsent: true,
+        date: selectedDate?.toISOString().split("T")[0] ?? "",
       });
     } catch (error) {
       console.log(error);
     }
   };
 
-  //   Loading and error states
   if (isLoading) return <TableSkeleton />;
-  if (error) return <div>Error fetching unpaid students</div>;
+  if (error) return <div>Error fetching paid students</div>;
 
-  //   Columns
   const columnsPaid: ColumnDef<CanteenRecord>[] = [
     {
       accessorKey: "student",
@@ -119,13 +137,45 @@ export default function PaidStudentsTable() {
       },
     },
   ];
+
   return (
-    <>
+    <div className="space-y-4">
+      <div className="flex items-center space-x-2">
+        <span className="text-muted-foreground">
+          Filter paid students by date:
+        </span>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[240px] justify-start text-left font-normal",
+                !selectedDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {selectedDate ? (
+                format(selectedDate, "PPP")
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={setSelectedDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
       <CanteenTable
         columns={columnsPaid}
         data={paid_students || []}
         searchField="student"
       />
-    </>
+    </div>
   );
 }

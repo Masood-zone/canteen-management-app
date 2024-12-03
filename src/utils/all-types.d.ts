@@ -125,6 +125,7 @@ type StudentRecord = {
   classId: number;
   settingsAmount?: number;
   isAbsent: boolean;
+  date?: string;
 };
 
 interface AdminAnalytics {

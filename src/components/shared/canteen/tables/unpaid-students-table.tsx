@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { format } from "date-fns";
 import {
   useUnpaidStudentRecordsByClassAndDate,
   useUpdateStudentStatus,
@@ -7,26 +9,40 @@ import { TableSkeleton } from "../../page-loader/loaders";
 import { CanteenTable } from "@/components/tables/canteen-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
 import ButtonLoader from "../../button-loader/button-loader";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function UnpaidStudentsTable() {
-  //   Fetch unpaid students
   const { assigned_class } = useAuthStore();
   const classId = assigned_class?.id ?? 0;
-  const today = new Date().toISOString().split("T")[0];
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
+
   const {
     data: unpaid_students,
     isLoading,
     error,
-  } = useUnpaidStudentRecordsByClassAndDate(classId, today);
-  //   Update student status
+  } = useUnpaidStudentRecordsByClassAndDate(
+    classId,
+    selectedDate?.toISOString().split("T")[0] ?? ""
+  );
+
   const { mutate: updateToPaid, isLoading: updatingLoader } =
     useUpdateStudentStatus();
 
   const handleUpdateToPaid = async (record: CanteenRecord) => {
     const confirm = window.confirm(
-      `Are you sure you want to mark ${record.student?.name} as paid?`
+      `Are you sure you want to mark ${
+        record.student?.name
+      } as paid for ${format(selectedDate!, "PP")}?`
     );
     if (!confirm) return;
     try {
@@ -38,9 +54,12 @@ export default function UnpaidStudentsTable() {
       console.log(error);
     }
   };
+
   const handleUpdateToAbsent = async (record: CanteenRecord) => {
     const confirm = window.confirm(
-      `Are you sure you want to mark ${record.student?.name} as absent?`
+      `Are you sure you want to mark ${
+        record.student?.name
+      } as absent for ${format(selectedDate!, "PP")}?`
     );
     if (!confirm) return;
     try {
@@ -53,11 +72,9 @@ export default function UnpaidStudentsTable() {
     }
   };
 
-  //   Loading and error states
   if (isLoading) return <TableSkeleton />;
   if (error) return <div>Error fetching unpaid students</div>;
 
-  //   Columns
   const columnsUnpaid: ColumnDef<CanteenRecord>[] = [
     {
       accessorKey: "student",
@@ -120,12 +137,43 @@ export default function UnpaidStudentsTable() {
   ];
 
   return (
-    <>
+    <div className="space-y-2">
+      <div className="flex items-center space-x-2">
+        <span className="text-muted-foreground">
+          Filter unpaid students by date:
+        </span>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[240px] justify-start text-left font-normal",
+                !selectedDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {selectedDate ? (
+                format(selectedDate, "PPP")
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={setSelectedDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
       <CanteenTable
         columns={columnsUnpaid}
         data={unpaid_students || []}
         searchField="student"
       />
-    </>
+    </div>
   );
 }
