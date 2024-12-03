@@ -52,23 +52,33 @@ export default function TeacherRecordsDetail() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {records.map((record) => (
-            <TableRow key={record.id}>
-              <TableCell>
-                {format(new Date(record.submitedAt), "LLL dd, y")}
-              </TableCell>
-              <TableCell>{record.student.name}</TableCell>
-              <TableCell>{record.class.name}</TableCell>
-              <TableCell>₵{record.amount.toFixed(2)}</TableCell>
-              <TableCell>
-                {record.hasPaid
-                  ? "Paid"
-                  : record.isAbsent
-                  ? "Absent"
-                  : "Unpaid"}
-              </TableCell>
-            </TableRow>
-          ))}
+          {records.map(
+            (record: {
+              id: number;
+              submitedAt: string;
+              student: { name: string };
+              class: { name: string };
+              amount: number;
+              hasPaid: boolean;
+              isAbsent: boolean;
+            }) => (
+              <TableRow key={record.id}>
+                <TableCell>
+                  {format(new Date(record.submitedAt), "LLL dd, y")}
+                </TableCell>
+                <TableCell>{record.student.name}</TableCell>
+                <TableCell>{record.class.name}</TableCell>
+                <TableCell>₵{record.amount.toFixed(2)}</TableCell>
+                <TableCell>
+                  {record.hasPaid
+                    ? "Paid"
+                    : record.isAbsent
+                    ? "Absent"
+                    : "Unpaid"}
+                </TableCell>
+              </TableRow>
+            )
+          )}
         </TableBody>
       </Table>
     </div>
