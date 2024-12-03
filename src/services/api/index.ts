@@ -219,53 +219,41 @@ export const fetchRecordsByClassAndDate = async (
 /**
  * Fetch all records of unpaid students.
  */
-export const unpaidStudentRecordsByClassAndDate = async (
-  classId: number,
+export const getTeacherSubmittedRecords = async (
+  teacherId: number,
   date: string
 ) => {
   try {
     const response = await apiClient.get(
-      `/records/${classId}/unpaid?date=${date}`
+      `/records/teacher/${teacherId}?date=${date}`
     );
     return response.data;
   } catch (error) {
-    console.error("Error fetching unpaid records:", error);
+    console.error("Error fetching teacher submitted records:", error);
     throw error;
   }
 };
 
-/**
- * Fetch all records of paid students.
- */
-export const paidStudentRecordsByClassAndDate = async (
+//Mutation
+export const getStudentRecordsByClassAndDate = async (
   classId: number,
   date: string
 ) => {
   try {
-    const response = await apiClient.get(
-      `/records/${classId}/paid?date=${date}`
-    );
+    const response = await apiClient.get(`/records/${classId}?date=${date}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching paid records:", error);
+    console.error("Error fetching student records:", error);
     throw error;
   }
 };
 
-/**
- * Fetch all records of absent students.
- */
-export const absentStudentRecordsByClassAndDate = async (
-  classId: number,
-  date: string
-) => {
+export const submitTeacherRecord = async (data: SubmitTeacherRecordPayload) => {
   try {
-    const response = await apiClient.get(
-      `/records/${classId}/absent?date=${date}`
-    );
+    const response = await apiClient.post("/records/submit", data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching absent records:", error);
+    console.error("Error submitting teacher record:", error);
     throw error;
   }
 };

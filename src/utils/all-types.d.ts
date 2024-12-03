@@ -140,3 +140,30 @@ interface TeacherRecord {
   name: string;
   totalAmount: number;
 }
+
+interface SubmitTeacherRecordPayload {
+  classId: number;
+  date: string;
+  unpaidStudents: Array<{
+    id: number;
+    amount: number;
+    paidBy: string;
+    hasPaid: boolean;
+    date: string;
+  }>;
+  paidStudents: Array<{
+    id: number;
+    amount: number;
+    paidBy: string;
+    hasPaid: boolean;
+    date: string;
+  }>;
+  absentStudents: Array<{
+    id: number;
+    amount_owing: number;
+    paidBy: string;
+    hasPaid: boolean;
+    date: string;
+  }>;
+  submittedBy: number;
+}

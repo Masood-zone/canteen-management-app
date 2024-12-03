@@ -18,13 +18,13 @@ import {
   getPresetAmount,
   fetchRecordsByClassAndDate,
   updateRecordsAmount,
-  unpaidStudentRecordsByClassAndDate,
-  paidStudentRecordsByClassAndDate,
-  absentStudentRecordsByClassAndDate,
   updateStudentStatus,
   fetchClass,
   fetchTeacherAnalytics,
   fetchAdminAnalytics,
+  getTeacherSubmittedRecords,
+  submitTeacherRecord,
+  getStudentRecordsByClassAndDate,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -369,57 +369,52 @@ export const useUpdateRecordsAmount = () => {
 };
 
 /**
- * Query: Get all unpaid students by class and date.
+ * Query: Get all records of students by class and date.
  */
-export const useUnpaidStudentRecordsByClassAndDate = (
+export const useStudentRecordsByClassAndDate = (
   classId: number,
   date: string
 ) => {
   return useQuery(
-    ["unpaidRecords", classId, date],
-    () => unpaidStudentRecordsByClassAndDate(classId, date),
+    ["studentRecords", classId, date],
+    () => getStudentRecordsByClassAndDate(classId, date),
     {
+      enabled: !!classId && !!date,
       onError: (error) => {
         console.error(error);
-        toast.error("Failed to fetch unpaid records.");
+        toast.error("Failed to fetch student records.");
       },
     }
   );
 };
 
-/**
- * Query: Get all paid students by class and date.
- */
-export const usePaidStudentRecordsByClassAndDate = (
-  classId: number,
-  date: string
-) => {
-  return useQuery(
-    ["paidRecords", classId, date],
-    () => paidStudentRecordsByClassAndDate(classId, date),
-    {
-      onError: (error) => {
-        console.error(error);
-        toast.error("Failed to fetch paid records.");
-      },
-    }
-  );
+// New mutation for submitting teacher records
+export const useSubmitTeacherRecord = () => {
+  const queryClient = useQueryClient();
+  return useMutation(submitTeacherRecord, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["studentRecords"]);
+      toast.success("Records submitted successfully.");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to submit records.");
+    },
+  });
 };
 
 /**
- * Query: Get all absent students by class and date.
+ * Query: Get all records of absent students by class and date.
  */
-export const useAbsentStudentRecordsByClassAndDate = (
-  classId: number,
-  date: string
-) => {
+export const useTeacherSubmittedRecords = (teacherId: number, date: string) => {
   return useQuery(
-    ["absentRecords", classId, date],
-    () => absentStudentRecordsByClassAndDate(classId, date),
+    ["submittedRecords", teacherId, date],
+    () => getTeacherSubmittedRecords(teacherId, date),
     {
+      enabled: !!teacherId && !!date,
       onError: (error) => {
         console.error(error);
-        toast.error("Failed to fetch absent records.");
+        toast.error("Failed to fetch submitted records.");
       },
     }
   );
@@ -434,9 +429,7 @@ export const useUpdateStudentStatus = () => {
   return useMutation((data: StudentRecord) => updateStudentStatus(data), {
     onSuccess: () => {
       toast.success("Record submitted successfully!");
-      queryClient.invalidateQueries(["unpaidRecords"]);
-      queryClient.invalidateQueries(["paidRecords"]);
-      queryClient.invalidateQueries(["absentRecords"]);
+      queryClient.invalidateQueries(["studentRecords"]);
     },
     onError: (error) => {
       console.error(error);

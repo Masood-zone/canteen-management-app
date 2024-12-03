@@ -84,21 +84,22 @@ export const teacher_nav = {
         },
       ],
     },
-    {
-      title: "Accounting",
-      url: "/teacher",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Daily Payments",
-          url: "/teacher/accounting/daily-payments",
-        },
-        {
-          title: "Payment History",
-          url: "/teacher/accounting/payment-history",
-        },
-      ],
-    },
+    // To be worked on later
+    // {
+    //   title: "Accounting",
+    //   url: "/teacher",
+    //   icon: BookOpen,
+    //   items: [
+    //     {
+    //       title: "Daily Payments",
+    //       url: "/teacher/accounting/daily-payments",
+    //     },
+    //     {
+    //       title: "Payment History",
+    //       url: "/teacher/accounting/payment-history",
+    //     },
+    //   ],
+    // },
     {
       title: "Settings",
       url: "/teacher/settings",

@@ -1,5 +1,4 @@
-"use client";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -12,35 +11,145 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  AbsentStudentsTable,
-  PaidStudentsTable,
-  UnpaidStudentsTable,
-} from "./list/table";
+  useStudentRecordsByClassAndDate,
+  useUpdateStudentStatus,
+} from "@/services/api/queries";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { CanteenTable } from "@/components/tables/canteen-table";
+import { ColumnDef } from "@tanstack/react-table";
 
 export default function Canteen() {
   const navigate = useNavigate();
   const { user, assigned_class } = useAuthStore();
   const teacher = user?.user;
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const classId = assigned_class?.id ?? 0;
+  const formattedDate = selectedDate.toISOString().split("T")[0];
+  const { data: studentRecords } = useStudentRecordsByClassAndDate(
+    classId,
+    formattedDate
+  );
+  const { mutate: updateStatus, isLoading: updatingLoader } =
+    useUpdateStudentStatus();
+
+  const handleUpdateStatus = async (
+    record: CanteenRecord,
+    newStatus: { hasPaid: boolean; isAbsent: boolean }
+  ) => {
+    try {
+      await updateStatus({
+        ...record,
+        ...newStatus,
+        date: selectedDate?.toISOString().split("T")[0] ?? "",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const columns: ColumnDef<CanteenRecord>[] = [
+    {
+      accessorKey: "student.name",
+      header: "Student Name",
+    },
+    {
+      accessorKey: "settingsAmount",
+      header: "Amount",
+      cell: ({ row }) => `₵${row.original.settingsAmount.toFixed(2)}`,
+    },
+    {
+      accessorKey: "submitedAt",
+      header: "Date",
+      cell: ({ row }) => format(new Date(row.original.submitedAt), "PPp"),
+    },
+    {
+      accessorKey: "isPrepaid",
+      header: "Prepaid",
+      cell: ({ row }) => (row.original.isPrepaid ? "Yes" : "No"),
+    },
+    {
+      accessorKey: "hasPaid",
+      header: "Payment Status",
+      cell: ({ row }) => (row.original.hasPaid ? "Paid" : "Unpaid"),
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const record = row.original;
+        return (
+          <div className="flex space-x-2">
+            <Button
+              variant={record.hasPaid ? "destructive" : "default"}
+              onClick={() =>
+                handleUpdateStatus(record, {
+                  hasPaid: !record.hasPaid,
+                  isAbsent: false,
+                })
+              }
+              disabled={updatingLoader}
+            >
+              {record.hasPaid ? "Mark as Unpaid" : "Mark as Paid"}
+            </Button>
+            {!record.hasPaid && !record.isAbsent && (
+              <Button
+                variant="outline"
+                onClick={() =>
+                  handleUpdateStatus(record, { hasPaid: false, isAbsent: true })
+                }
+                disabled={updatingLoader}
+              >
+                Mark as Absent
+              </Button>
+            )}
+            {record.isAbsent && (
+              <Button
+                variant="outline"
+                onClick={() =>
+                  handleUpdateStatus(record, {
+                    hasPaid: false,
+                    isAbsent: false,
+                  })
+                }
+                disabled={updatingLoader}
+              >
+                Mark as Present
+              </Button>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <section className="container mx-auto py-10">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        {/* Teacher info with assigned class */}
         <div>
           <h1 className="text-2xl font-bold">Hello, {teacher?.name}</h1>
           <p className="text-xl py-2">{assigned_class?.name}</p>
           <p className="text-base">Record canteen for {assigned_class?.name}</p>
         </div>
-        {/* Record canteen button */}
-        <div>
+        <div className="space-x-2">
+          <Button>
+            <Link to="/teacher/canteen/submitted-records">
+              View Submitted Records
+            </Link>
+          </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button>Submit canteen records</Button>
+              <Button variant="ghost">Submit canteen records</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -62,22 +171,65 @@ export default function Canteen() {
           </AlertDialog>
         </div>
       </div>
-      {/* Canteen tables */}
-      <div>
+      <div className="space-y-4">
+        <div className="flex items-center space-x-2">
+          <span className="text-muted-foreground">
+            Filter students records by date:
+          </span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[240px] justify-start text-left font-normal",
+                  !selectedDate && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {selectedDate ? (
+                  format(selectedDate, "PPP")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => date && setSelectedDate(date)}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
         <Tabs defaultValue="unpaid" className="w-full">
           <TabsList>
             <TabsTrigger value="unpaid">Unpaid Students</TabsTrigger>
             <TabsTrigger value="paid">Paid Students</TabsTrigger>
             <TabsTrigger value="absent">Absent Students</TabsTrigger>
           </TabsList>
+
           <TabsContent value="unpaid">
-            <UnpaidStudentsTable />
+            <CanteenTable
+              columns={columns}
+              data={studentRecords?.unpaidStudents || []}
+              searchField="student.name"
+            />
           </TabsContent>
           <TabsContent value="paid">
-            <PaidStudentsTable />
+            <CanteenTable
+              columns={columns}
+              data={studentRecords?.paidStudents || []}
+              searchField="student.name"
+            />
           </TabsContent>
           <TabsContent value="absent">
-            <AbsentStudentsTable />
+            <CanteenTable
+              columns={columns}
+              data={studentRecords?.absentStudents || []}
+              searchField="student.name"
+            />
           </TabsContent>
         </Tabs>
       </div>

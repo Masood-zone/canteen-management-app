@@ -306,7 +306,6 @@ const rootRoutes = createBrowserRouter(
               return { Component: CanteenRecords };
             }}
           />
-
           <Route
             path=":/teacherId/record"
             lazy={async () => {
@@ -362,6 +361,35 @@ const rootRoutes = createBrowserRouter(
             return { Component: CanteenLayout };
           }}
         >
+          <Route
+            path="submitted-records"
+            lazy={async () => {
+              const { default: SubmittedRecords } = await import(
+                "@/pages/teacher/canteen/list/submitted-records-list.tsx"
+              );
+              return { Component: SubmittedRecords };
+            }}
+          />
+          {/* View records */}
+          <Route
+            path=":id/view"
+            lazy={async () => {
+              const { default: ViewCanteenRecord } = await import(
+                "@/pages/teacher/canteen/view/view-canteen.records.tsx"
+              );
+              return { Component: ViewCanteenRecord };
+            }}
+          />
+          {/* Edit records */}
+          <Route
+            path=":id/edit"
+            lazy={async () => {
+              const { default: EditCanteenRecord } = await import(
+                "@/pages/teacher/canteen/edit/edit-canteen.tsx"
+              );
+              return { Component: EditCanteenRecord };
+            }}
+          />
           <Route
             index
             lazy={async () => {
