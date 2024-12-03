@@ -288,6 +288,7 @@ const rootRoutes = createBrowserRouter(
             }}
           />
         </Route>
+        {/* Canteen Records */}
         <Route
           path="canteen-records"
           lazy={async () => {
@@ -313,6 +314,62 @@ const rootRoutes = createBrowserRouter(
                 "@/pages/admin/canteen/details/records-detail.tsx"
               );
               return { Component: TeacherRecordsDetail };
+            }}
+          />
+        </Route>
+        {/* Expenses */}
+        <Route
+          path="expenses"
+          lazy={async () => {
+            const { default: ExpensesLayout } = await import(
+              "@/pages/admin/expenses"
+            );
+            return { Component: ExpensesLayout };
+          }}
+        >
+          <Route
+            index
+            lazy={async () => {
+              const { default: Expenses } = await import(
+                "@/pages/admin/expenses/expenses.tsx"
+              );
+              return { Component: Expenses };
+            }}
+          />
+          <Route
+            path="add"
+            lazy={async () => {
+              const { default: AddExpense } = await import(
+                "@/pages/admin/expenses/add/create-expense.tsx"
+              );
+              return { Component: AddExpense };
+            }}
+          />
+          <Route
+            path=":id"
+            lazy={async () => {
+              const { default: ViewExpense } = await import(
+                "@/pages/admin/expenses/view/view-expense.tsx"
+              );
+              return { Component: ViewExpense };
+            }}
+          />
+          <Route
+            path=":id/edit"
+            lazy={async () => {
+              const { default: EditExpense } = await import(
+                "@/pages/admin/expenses/edit/edit-expense.tsx"
+              );
+              return { Component: EditExpense };
+            }}
+          />
+          <Route
+            path="overall-totals"
+            lazy={async () => {
+              const { default: OverallTotals } = await import(
+                "@/pages/admin/expenses/overall/overall.tsx"
+              );
+              return { Component: OverallTotals };
             }}
           />
         </Route>

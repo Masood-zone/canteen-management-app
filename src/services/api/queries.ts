@@ -25,6 +25,14 @@ import {
   getTeacherSubmittedRecords,
   submitTeacherRecord,
   getStudentRecordsByClassAndDate,
+  fetchExpenses,
+  fetchExpense,
+  createExpense,
+  updateExpense,
+  fetchReferences,
+  createReference,
+  updateReference,
+  fetchReference,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -116,6 +124,122 @@ export const useFetchStudent = (id: number) => {
     onError: (error) => {
       console.log(error);
       toast.error("Failed to fetch student.");
+    },
+  });
+};
+
+/**
+ * Query: Fetch all expenses.
+ */
+export const useFetchExpenses = () => {
+  return useQuery(["expenses"], fetchExpenses, {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch expenses.");
+    },
+  });
+};
+
+/**
+ * Query: Fetch all references.
+ */
+export const useFetchReferences = () => {
+  return useQuery(["references"], fetchReferences, {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch references.");
+    },
+  });
+};
+/**
+ * Query: Fetch reference by id.
+ */
+export const useFetchReference = (id: number) => {
+  return useQuery(["references", id], () => fetchReference(id), {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch reference.");
+    },
+  });
+};
+
+/**
+ * Fetch expense by id.
+ */
+export const useFetchExpense = (id: number) => {
+  return useQuery(["expenses", id], () => fetchExpense(id), {
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch expense.");
+    },
+  });
+};
+/**
+ * Mutation: Create a new reference
+ */
+export const useCreateReference = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  return useMutation((data: Reference) => createReference(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["references"]);
+      toast.success("Reference created successfully!");
+      navigate("/admin/expenses");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to create reference. Please try again.");
+    },
+  });
+};
+
+/**
+ * Mutation: Update a reference
+ */
+export const useUpdateReference = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: Reference) => updateReference(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["references"]);
+      toast.success("References updated successfully!");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to update expense. Please try again.");
+    },
+  });
+};
+
+/**
+ * Mutation: Create a new expense.
+ */
+export const useCreateExpense = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: Expense) => createExpense(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["expenses"]);
+      toast.success("Expense created successfully!");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to create expense. Please try again.");
+    },
+  });
+};
+
+/**
+ * Mutation: Update an expense.
+ */
+export const useUpdateExpense = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: Expense) => updateExpense(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["expenses"]);
+      toast.success("Expense updated successfully!");
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to update expense. Please try again.");
     },
   });
 };

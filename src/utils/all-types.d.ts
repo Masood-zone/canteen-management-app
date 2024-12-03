@@ -167,3 +167,18 @@ interface SubmitTeacherRecordPayload {
   }>;
   submittedBy: number;
 }
+
+type Expense = {
+  id: number;
+  amount: number;
+  date: string;
+  description: string;
+  references?: Reference;
+  submittedBy?: number;
+};
+
+type Reference = {
+  id?: number;
+  name?: string;
+  description?: string;
+};

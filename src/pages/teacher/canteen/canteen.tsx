@@ -203,28 +203,12 @@ export default function Canteen() {
             </PopoverContent>
           </Popover>
         </div>
-        <Tabs defaultValue="unpaid" className="w-full">
+        <Tabs defaultValue="all" className="w-full">
           <TabsList>
-            <TabsTrigger value="unpaid">Unpaid Students</TabsTrigger>
-            <TabsTrigger value="paid">Paid Students</TabsTrigger>
-            <TabsTrigger value="absent">Absent Students</TabsTrigger>
+            <TabsTrigger value="all">Unpaid Students</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="unpaid">
-            <CanteenTable
-              columns={columns}
-              data={studentRecords || []}
-              searchField="student.name"
-            />
-          </TabsContent>
-          <TabsContent value="paid">
-            <CanteenTable
-              columns={columns}
-              data={studentRecords || []}
-              searchField="student.name"
-            />
-          </TabsContent>
-          <TabsContent value="absent">
+          <TabsContent value="all">
             <CanteenTable
               columns={columns}
               data={studentRecords || []}

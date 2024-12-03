@@ -70,7 +70,10 @@ export default function EditClassForm({
             </SelectTrigger>
             <SelectContent>
               {teachersList?.map((teacher) => (
-                <SelectItem key={teacher.id} value={teacher.id.toString()}>
+                <SelectItem
+                  key={teacher.id}
+                  value={teacher?.id?.toString() || ""}
+                >
                   {teacher.name}
                 </SelectItem>
               ))}
