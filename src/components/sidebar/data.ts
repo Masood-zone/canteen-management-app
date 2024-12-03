@@ -42,10 +42,10 @@ export const super_nav = {
           title: "Canteen Records",
           url: "/admin/canteen-records",
         },
-        {
-          title: "Payment History",
-          url: "/admin/payment-history",
-        },
+        // {
+        //   title: "Payment History",
+        //   url: "/admin/payment-history",
+        // },
       ],
     },
     {

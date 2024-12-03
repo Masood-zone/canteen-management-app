@@ -291,12 +291,32 @@ const rootRoutes = createBrowserRouter(
         <Route
           path="canteen-records"
           lazy={async () => {
-            const { default: CanteenRecords } = await import(
+            const { default: AdminCanteenLayout } = await import(
               "@/pages/admin/canteen"
             );
-            return { Component: CanteenRecords };
+            return { Component: AdminCanteenLayout };
           }}
-        />
+        >
+          <Route
+            index
+            lazy={async () => {
+              const { default: CanteenRecords } = await import(
+                "@/pages/admin/canteen/canteen.tsx"
+              );
+              return { Component: CanteenRecords };
+            }}
+          />
+
+          <Route
+            path=":/teacherId/record"
+            lazy={async () => {
+              const { default: TeacherRecordsDetail } = await import(
+                "@/pages/admin/canteen/details/records-detail.tsx"
+              );
+              return { Component: TeacherRecordsDetail };
+            }}
+          />
+        </Route>
         {/* Not found */}
         <Route
           path="*"
