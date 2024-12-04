@@ -137,14 +137,14 @@ export default function Canteen() {
           <p className="text-base">Record canteen for {assigned_class?.name}</p>
         </div>
         <div className="space-x-2">
-          <Button>
+          <Button variant="ghost">
             <Link to="/teacher/canteen/submitted-records">
               View Submitted Records
             </Link>
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="ghost">Submit canteen records</Button>
+              <Button>Submit canteen records</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
