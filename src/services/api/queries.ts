@@ -227,10 +227,12 @@ export const useUpdateReference = () => {
  */
 export const useCreateExpense = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   return useMutation((data: Expense) => createExpense(data), {
     onSuccess: () => {
       queryClient.invalidateQueries(["expenses"]);
       toast.success("Expense created successfully!");
+      navigate("/admin/expenses");
     },
     onError: (error) => {
       console.error(error);
