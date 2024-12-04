@@ -14,19 +14,13 @@ import {
 export default function TeacherRecordsDetail() {
   const { teacherId } = useParams<{ teacherId: string }>();
   const location = useLocation();
-  const { dateRange } = location.state as {
-    dateRange: { from: Date; to: Date };
-  };
+  const { date } = location.state as { date: Date };
 
   const {
     data: records,
     isLoading,
     error,
-  } = useFetchTeacherRecordsDetail(
-    parseInt(teacherId!),
-    dateRange.from,
-    dateRange.to
-  );
+  } = useFetchTeacherRecordsDetail(parseInt(teacherId!), new Date(date));
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading teacher records</p>;
@@ -37,10 +31,7 @@ export default function TeacherRecordsDetail() {
         <h1 className="text-3xl font-bold">Teacher Records</h1>
         <Button onClick={() => window.history.back()}>Back to Summary</Button>
       </div>
-      <p className="mb-4">
-        Date Range: {format(dateRange.from, "LLL dd, y")} -{" "}
-        {format(dateRange.to, "LLL dd, y")}
-      </p>
+      <p className="mb-4">Date: {format(new Date(date), "LLL dd, y")}</p>
       <Table>
         <TableHeader>
           <TableRow>

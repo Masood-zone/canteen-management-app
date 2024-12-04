@@ -39,6 +39,10 @@ export const super_nav = {
       icon: BookOpen,
       items: [
         {
+          title: "Setup Canteen",
+          url: "/admin/canteen-records/setup-canteen",
+        },
+        {
           title: "Canteen Records",
           url: "/admin/canteen-records",
         },

@@ -298,6 +298,17 @@ const rootRoutes = createBrowserRouter(
             return { Component: AdminCanteenLayout };
           }}
         >
+          {/* Setup canteen */}
+          <Route
+            path="setup-canteen"
+            lazy={async () => {
+              const { default: SetupCanteen } = await import(
+                "@/pages/admin/canteen/setup/setup-canteen.tsx"
+              );
+              return { Component: SetupCanteen };
+            }}
+          />
+          {/* View list of canteen records */}
           <Route
             index
             lazy={async () => {
