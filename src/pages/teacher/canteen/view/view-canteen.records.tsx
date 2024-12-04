@@ -36,8 +36,9 @@ export default function ViewCanteenRecord() {
     <div className="container mx-auto py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold"></h1>
-          <p className="text-base">Canteen Record {assigned_class?.name}</p>
+          <h1 className="text-2xl font-bold">
+            Canteen Record {assigned_class?.name}
+          </h1>
         </div>
         <div className="space-x-2">
           <GoBackButton />

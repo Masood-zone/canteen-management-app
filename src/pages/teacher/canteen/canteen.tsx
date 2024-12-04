@@ -200,7 +200,7 @@ export default function Canteen() {
         </div>
         <Tabs defaultValue="all" className="w-full">
           <TabsList>
-            <TabsTrigger value="all">Unpaid Students</TabsTrigger>
+            <TabsTrigger value="all">Students</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all">

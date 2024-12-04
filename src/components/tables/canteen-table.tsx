@@ -35,7 +35,7 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchField: string;
+  searchField?: string;
 }
 
 export function CanteenTable<TData, TValue>({
@@ -73,16 +73,18 @@ export function CanteenTable<TData, TValue>({
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder={`Filter ${searchField}...`}
-          value={
-            (table.getColumn(searchField)?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn(searchField)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        {searchField && (
+          <Input
+            placeholder={`Filter ${searchField}...`}
+            value={
+              (table.getColumn(searchField)?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn(searchField)?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

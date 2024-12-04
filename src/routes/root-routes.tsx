@@ -303,7 +303,7 @@ const rootRoutes = createBrowserRouter(
             path="setup-canteen"
             lazy={async () => {
               const { default: SetupCanteen } = await import(
-                "@/pages/admin/canteen/setup/setup-canteen.tsx"
+                "@/pages/admin/canteen/setup/list/setup-canteen.tsx"
               );
               return { Component: SetupCanteen };
             }}
