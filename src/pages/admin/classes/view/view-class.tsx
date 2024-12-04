@@ -70,9 +70,6 @@ export default function ViewClass() {
                     Age
                   </TableHead>
                   <TableHead className="w-1/4 text-left bg-primary text-white">
-                    Parent Phone
-                  </TableHead>
-                  <TableHead className="w-1/4 text-left bg-primary text-white">
                     Gender
                   </TableHead>
                   <TableHead className="w-1/4 text-left bg-primary text-white">
@@ -83,7 +80,6 @@ export default function ViewClass() {
                   <TableRow key={student.id}>
                     <TableCell>{student.name}</TableCell>
                     <TableCell>{student.age}</TableCell>
-                    <TableCell>{student.parentPhone}</TableCell>
                     <TableCell>{student.gender}</TableCell>
                     <TableCell className="flex items-center space-x-2">
                       <Button>
