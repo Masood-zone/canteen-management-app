@@ -88,7 +88,7 @@ export default function Canteen() {
                   <Input
                     id="canteen-price"
                     type="number"
-                    defaultValue={amountSetting?.value}
+                    defaultValue={amountSetting?.setting?.value}
                     {...register("value")}
                     className="w-56 text-right"
                     min="0"

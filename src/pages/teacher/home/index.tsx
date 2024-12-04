@@ -34,7 +34,7 @@ export default function TeacherHome() {
               <p className="text-red-500">Error fetching canteen price</p>
             )}
             <span className="text-2xl font-bold text-primary text-center px-2">
-              Gh₵{price?.value || 0}
+              Gh₵{price?.setting?.value || 0}
             </span>
           </h2>
           <p>This is the current price of the canteen.</p>
