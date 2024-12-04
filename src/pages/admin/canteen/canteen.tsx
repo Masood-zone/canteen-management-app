@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { CalendarIcon, ChevronRightIcon } from "lucide-react";
-import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -17,23 +16,17 @@ import { CardsSkeleton } from "@/components/shared/page-loader/loaders";
 
 export default function CanteenRecords() {
   const navigate = useNavigate();
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: new Date(),
-  });
+  const [date, setDate] = useState<Date>(new Date());
 
   const {
     data: teacherRecords,
     isLoading,
     error,
-  } = useFetchTeacherRecordsSummary(
-    date?.from ?? new Date(),
-    date?.to ?? new Date()
-  );
+  } = useFetchTeacherRecordsSummary(date);
 
   const handleViewRecords = (teacherId: number) => {
     navigate(`/admin/canteen-records/${teacherId}/records`, {
-      state: { dateRange: date },
+      state: { date: date },
     });
   };
 
@@ -46,33 +39,20 @@ export default function CanteenRecords() {
             <Button
               variant={"outline"}
               className={cn(
-                "w-[300px] justify-start text-left font-normal",
+                "w-[240px] justify-start text-left font-normal",
                 !date && "text-muted-foreground"
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date?.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, "LLL dd, y")} -{" "}
-                    {format(date.to, "LLL dd, y")}
-                  </>
-                ) : (
-                  format(date.from, "LLL dd, y")
-                )
-              ) : (
-                <span>Pick a date range</span>
-              )}
+              {date ? format(date, "PPP") : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="end">
             <Calendar
-              initialFocus
-              mode="range"
-              defaultMonth={date?.from}
+              mode="single"
               selected={date}
-              onSelect={setDate}
-              numberOfMonths={2}
+              onSelect={(newDate) => newDate && setDate(newDate)}
+              initialFocus
             />
           </PopoverContent>
         </Popover>

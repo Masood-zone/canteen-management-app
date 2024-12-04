@@ -335,18 +335,12 @@ export const useUpdateTeacher = () => {
 /*
  * Query: Fetch teacher records summary
  */
-export const useFetchTeacherRecordsSummary = (
-  startDate: Date,
-  endDate: Date
-) => {
+export const useFetchTeacherRecordsSummary = (date: Date) => {
   return useQuery(
-    ["teacherRecordsSummary", startDate, endDate],
+    ["teacherRecordsSummary", date],
     async () => {
       const response = await apiClient.get("/teachers/summary", {
-        params: {
-          from: startDate.toISOString(),
-          to: endDate.toISOString(),
-        },
+        params: { date: date.toISOString() },
       });
       return response.data;
     },
