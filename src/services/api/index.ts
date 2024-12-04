@@ -30,7 +30,7 @@ export const fetchRecordsAmount = async () => {
  */
 export const updateUser = async (data: FormUser) => {
   try {
-    const response = await apiClient.put(`/users/update/${data.id}`, data);
+    const response = await apiClient.put(`/users/${data.id}`, data);
     return response.data;
   } catch (error) {
     console.error("Error updating user:", error);
