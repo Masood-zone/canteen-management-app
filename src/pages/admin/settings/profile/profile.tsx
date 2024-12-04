@@ -35,7 +35,7 @@ export default function Profile() {
   const gender = watch("gender");
   const onSubmit = async (data: FormUser) => {
     try {
-      await updateUser({ ...data, id: userData!.id });
+      await updateUser({ ...data, id: userData!.id, gender: gender });
     } catch (error) {
       console.error(error);
     }
