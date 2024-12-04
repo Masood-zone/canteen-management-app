@@ -77,7 +77,7 @@ export default function AddClass() {
             <div className="space-y-2">
               <Label htmlFor="teacher">Class Teacher</Label>
               <Select
-                value={supervisorId.toString()}
+                value={supervisorId?.toString()}
                 onValueChange={(value) =>
                   setValue("supervisorId", value, { shouldValidate: true })
                 }
@@ -89,7 +89,7 @@ export default function AddClass() {
                 <SelectContent>
                   {teachers?.map((teacher: Teacher) => (
                     <SelectItem
-                      key={teacher.id}
+                      key={teacher?.id}
                       value={teacher?.id?.toString() || ""}
                     >
                       {teacher.name}
