@@ -14,8 +14,8 @@ import { Link, useParams } from "react-router-dom";
 
 export default function ViewTeacher() {
   const { id } = useParams();
-  const { data: teacher } = useFetchTeacher(Number(id));
-
+  const { data: teacherData } = useFetchTeacher(Number(id));
+  const teacher = teacherData?.teacher;
   return (
     <section className="w-full space-y-5">
       {/* Go back */}
@@ -49,21 +49,15 @@ export default function ViewTeacher() {
             </TableRow>
             <TableRow>
               <TableHead className="w-1/3 text-left">Email</TableHead>
-              <TableCell>Teacher@gmail.com</TableCell>
               <TableCell>{teacher?.email}</TableCell>
             </TableRow>
             <TableRow>
               <TableHead className="w-1/3 text-left">Gender</TableHead>
-              <TableCell>Teacher gender</TableCell>
               <TableCell>{teacher?.gender}</TableCell>
             </TableRow>
             <TableRow>
               <TableHead className="w-1/3 text-left">Assigned Class</TableHead>
-              <TableCell>{teacher?.assigned_class}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableHead className="w-1/3 text-left">Credentials</TableHead>
-              <TableCell>{teacher?.password}</TableCell>
+              <TableCell>{teacher?.assigned_class?.name}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
