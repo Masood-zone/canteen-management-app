@@ -78,22 +78,6 @@ export default function AddStudent() {
                 <p className="text-red-500 text-sm">This field is required</p>
               )}
             </div>
-            {/* Parent contact */}
-            <div className="space-y-2">
-              <Label htmlFor="parentPhone">Parent Contact</Label>
-              <Input
-                type="name"
-                id="parentPhone"
-                {...register("parentPhone", { required: true })}
-                autoComplete="off"
-                placeholder="Student's Parent Contact"
-                className="bg-transparent"
-                required
-              />
-              {errors.parentPhone && (
-                <p className="text-red-500 text-sm">This field is required</p>
-              )}
-            </div>
             {/* Age */}
             <div className="space-y-2">
               <Label htmlFor="age">Age</Label>

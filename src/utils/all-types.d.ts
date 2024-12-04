@@ -45,7 +45,6 @@ interface FormUser {
 type Student = {
   id: string | number;
   name: string;
-  parentPhone: string;
   age: number;
   classId: string | number;
   gender: "male" | "female";

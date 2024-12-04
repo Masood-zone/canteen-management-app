@@ -65,12 +65,6 @@ export default function ViewStudent() {
                 <TableCell>{student?.name}</TableCell>
               </TableRow>
               <TableRow>
-                <TableHead className="w-1/3 text-left">
-                  Parent's Number
-                </TableHead>
-                <TableCell>{student?.parentPhone}</TableCell>
-              </TableRow>
-              <TableRow>
                 <TableHead className="w-1/3 text-left">Teacher</TableHead>
                 <TableCell>
                   {teacher?.role === "TEACHER" || teacher?.role === "Teacher"

@@ -65,19 +65,6 @@ export default function EditStudentForm({
             required
           />
         </div>
-        {/* Parent number*/}
-        <div className="space-y-2">
-          <Label htmlFor="parentPhone">Parent Number</Label>
-          <Input
-            type="text"
-            id="parentPhone"
-            {...register("parentPhone", { required: true })}
-            autoComplete="off"
-            defaultValue={studentData?.parentPhone}
-            placeholder="Parent's number"
-            className="bg-transparent"
-          />
-        </div>
         {/* Age */}
         <div className="space-y-2">
           <Label htmlFor="age">Age</Label>

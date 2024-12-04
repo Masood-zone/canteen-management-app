@@ -57,20 +57,6 @@ export default function StudentsTable({
       },
     },
     {
-      accessorKey: "parentPhone",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Parent Contact
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-    },
-    {
       accessorKey: "gender",
       header: ({ column }) => {
         return (

@@ -34,7 +34,7 @@ export default function Login() {
       const { role } = user.user;
       if (role === "SUPER_ADMIN") {
         navigate("/admin");
-      } else if (role === "TEACHER") {
+      } else if (role === "TEACHER" || role === "Teacher") {
         navigate("/teacher");
       } else {
         navigate("/"); // Default fallback
