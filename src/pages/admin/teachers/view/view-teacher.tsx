@@ -27,7 +27,7 @@ export default function ViewTeacher() {
         {/* Name and email */}
         <div className="flex flex-col w-2/3 space-y-2">
           <h1 className="text-2xl font-bold">{teacher?.name}</h1>
-          <p>{teacher.email}</p>
+          <p>{teacher?.email}</p>
           <div className="mt-2 flex items-center gap-2">
             <Link to={`/admin/teachers/${id}/edit`}>
               <Button>
@@ -45,17 +45,17 @@ export default function ViewTeacher() {
           <TableBody>
             <TableRow>
               <TableHead className="w-1/3 text-left">Phone Number</TableHead>
-              <TableCell>{teacher.phone}</TableCell>
+              <TableCell>{teacher?.phone}</TableCell>
             </TableRow>
             <TableRow>
               <TableHead className="w-1/3 text-left">Email</TableHead>
               <TableCell>Teacher@gmail.com</TableCell>
-              <TableCell>{teacher.email}</TableCell>
+              <TableCell>{teacher?.email}</TableCell>
             </TableRow>
             <TableRow>
               <TableHead className="w-1/3 text-left">Gender</TableHead>
               <TableCell>Teacher gender</TableCell>
-              <TableCell>{teacher.gender}</TableCell>
+              <TableCell>{teacher?.gender}</TableCell>
             </TableRow>
             <TableRow>
               <TableHead className="w-1/3 text-left">Assigned Class</TableHead>
