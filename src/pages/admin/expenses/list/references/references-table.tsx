@@ -32,7 +32,6 @@ export default function ReferencesTable() {
     "references"
   );
 
-  if (isLoading) return <TableSkeleton />;
   if (error) return <div>Error fetching expenses</div>;
 
   const referencesColumn: ColumnDef<Reference>[] = [
@@ -128,11 +127,15 @@ export default function ReferencesTable() {
         </div>
         <ReferenceModal />
       </div>
-      <DataTable
-        data={references || []}
-        columns={referencesColumn}
-        searchField="description"
-      />
+      {isLoading ? (
+        <TableSkeleton />
+      ) : (
+        <DataTable
+          data={references || []}
+          columns={referencesColumn}
+          searchField="description"
+        />
+      )}
     </div>
   );
 }

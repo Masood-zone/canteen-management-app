@@ -12,9 +12,9 @@ function DataTableSkeleton() {
   return (
     <div className="flex flex-col space-y-5">
       <Skeleton className="w-full h-16 bg-primary/75" />
-      <Skeleton className="w-full h-16 bg-muted/50" />
-      <Skeleton className="w-full h-16 bg-muted/50" />
-      <Skeleton className="w-full h-16 bg-muted/50" />
+      <Skeleton className="w-full h-16 bg-gray-300" />
+      <Skeleton className="w-full h-16 bg-gray-300" />
+      <Skeleton className="w-full h-16 bg-gray-300" />
     </div>
   );
 }
@@ -22,10 +22,10 @@ function DataTableSkeleton() {
 export function PaleTableSkeleton() {
   return (
     <div className="flex flex-col space-y-5">
-      <Skeleton className="w-full h-16 bg-muted/50" />
-      <Skeleton className="w-full h-16 bg-muted/50" />
-      <Skeleton className="w-full h-16 bg-muted/50" />
-      <Skeleton className="w-full h-16 bg-muted/50" />
+      <Skeleton className="w-full h-16 bg-gray-300" />
+      <Skeleton className="w-full h-16 bg-gray-300" />
+      <Skeleton className="w-full h-16 bg-gray-300" />
+      <Skeleton className="w-full h-16 bg-gray-300" />
     </div>
   );
 }
@@ -34,7 +34,7 @@ export function CardsSkeleton({ count = 3 }: { count?: number }) {
   return (
     <div className="grid auto-rows-min gap-4 md:grid-cols-3">
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="aspect-video rounded-xl bg-muted/50" />
+        <div key={index} className="aspect-video rounded-xl bg-gray-300" />
       ))}
     </div>
   );
