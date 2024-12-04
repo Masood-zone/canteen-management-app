@@ -60,7 +60,7 @@ export default function Canteen() {
               ) : (
                 <>
                   <span className="text-muted-foreground">Price per meal:</span>
-                  <span>Ghc{amountSetting?.data?.value}</span>
+                  <span>Ghc{amountSetting?.setting?.value}</span>
                 </>
               )}
             </div>
