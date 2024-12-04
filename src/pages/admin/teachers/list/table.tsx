@@ -125,7 +125,7 @@ export default function TeachersTable({
         const teacher = row.original;
         return (
           <ActionMenu
-            id={teacher.id}
+            id={teacher?.id ?? 0}
             resourceName="Teacher"
             onDelete={(id) => deleteTeacher(id)}
           />

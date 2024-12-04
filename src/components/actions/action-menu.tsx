@@ -29,7 +29,7 @@ const ActionMenu = ({
   hasDelete = true,
   hasView = true,
 }: {
-  id: string | number;
+  id?: string | number;
   resourceName: string;
   onDelete: (id: string | number) => void;
   hasEdit?: boolean;
@@ -43,7 +43,11 @@ const ActionMenu = ({
     setIsDeleting(true);
     setError(null); // Clear any previous errors
     try {
-      await onDelete(id);
+      if (id !== undefined) {
+        await onDelete(id);
+      } else {
+        setError(`Failed to delete ${resourceName}. Invalid ID.`);
+      }
     } catch (err) {
       console.log(err);
       console.log(error);
