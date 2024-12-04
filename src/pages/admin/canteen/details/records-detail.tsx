@@ -53,17 +53,17 @@ export default function TeacherRecordsDetail() {
               hasPaid: boolean;
               isAbsent: boolean;
             }) => (
-              <TableRow key={record.id}>
+              <TableRow key={record?.id}>
                 <TableCell>
-                  {format(new Date(record.submitedAt), "LLL dd, y")}
+                  {format(new Date(record?.submitedAt), "LLL dd, y")}
                 </TableCell>
-                <TableCell>{record.student.name}</TableCell>
-                <TableCell>{record.class.name}</TableCell>
-                <TableCell>₵{record.amount.toFixed(2)}</TableCell>
+                <TableCell>{record?.student?.name}</TableCell>
+                <TableCell>{record?.class?.name}</TableCell>
+                <TableCell>₵{record?.amount?.toFixed(2)}</TableCell>
                 <TableCell>
-                  {record.hasPaid
+                  {record?.hasPaid
                     ? "Paid"
-                    : record.isAbsent
+                    : record?.isAbsent
                     ? "Absent"
                     : "Unpaid"}
                 </TableCell>
