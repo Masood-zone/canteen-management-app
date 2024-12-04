@@ -1,6 +1,6 @@
 import GoBackButton from "@/components/shared/go-back/go-back";
 import { PageHeading } from "@/components/typography/heading";
-import { useFetchClassById, useFetchTeacher } from "@/services/api/queries";
+import { useFetchClassById } from "@/services/api/queries";
 import { useParams } from "react-router-dom";
 import {
   Table,
@@ -16,11 +16,6 @@ import { Button } from "@/components/ui/button";
 export default function ViewClass() {
   const { id } = useParams();
   const { data: classData, isLoading } = useFetchClassById(Number(id));
-  const {
-    data: teacher,
-    error: teacherError,
-    isLoading: teacherLoading,
-  } = useFetchTeacher(Number(id));
 
   if (!classData)
     return (
@@ -28,7 +23,7 @@ export default function ViewClass() {
         <h1>Not Found</h1>
       </div>
     );
-  const teacherData = teacher?.data;
+  const teacherData = classData?.supervisor;
   return (
     <section className="w-full space-y-5">
       {/* Header */}
@@ -49,13 +44,7 @@ export default function ViewClass() {
                   <TableHead className="w-1/3 text-left">
                     Class Teacher
                   </TableHead>
-                  <TableCell>
-                    {teacherLoading
-                      ? "Loading..."
-                      : teacherError
-                      ? "Error fetching teacher"
-                      : teacherData?.name}
-                  </TableCell>
+                  <TableCell>{teacherData?.name}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableHead className="w-1/3 text-left">Class Name</TableHead>
