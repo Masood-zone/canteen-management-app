@@ -68,10 +68,6 @@ export default function ViewStudent() {
                 <TableCell>{student?.parentPhone}</TableCell>
               </TableRow>
               <TableRow>
-                <TableHead className="w-1/3 text-left">Teacher</TableHead>
-                {/* <TableCell>{student}</TableCell> */}
-              </TableRow>
-              <TableRow>
                 <TableHead className="w-1/3 text-left">Class/Level</TableHead>
                 <TableCell>
                   {classLoader ? "Loading..." : classData?.name}
