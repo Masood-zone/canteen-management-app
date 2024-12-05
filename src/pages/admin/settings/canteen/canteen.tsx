@@ -11,37 +11,75 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
+  useCreateRecordsAmount,
   useFetchRecordsAmount,
   useUpdateRecordsAmount,
 } from "@/services/api/queries";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useForm } from "react-hook-form";
 
 export default function Canteen() {
+  const { mutate: createRecordsAmount, isLoading: creatingPriceLoader } =
+    useCreateRecordsAmount();
   const { mutate: updateRecordsAmount, isLoading: updatingPriceLoader } =
     useUpdateRecordsAmount();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RecordsAmount>();
   const { data: amountSetting, isLoading, error } = useFetchRecordsAmount();
+
+  // State for edit mode and input value
+  const [isEditing, setIsEditing] = useState(false);
+  const [price, setPrice] = useState<string | number>("");
 
   useEffect(() => {
     if (error) {
       console.error("Error fetching records amount:", error);
       toast.error("Failed to fetch records amount.");
     }
-  }, [error]);
-
-  const onSubmit = async (data: RecordsAmount) => {
-    try {
-      await updateRecordsAmount(data);
-    } catch (error) {
-      console.error("Error updating records amount:", error);
+    if (amountSetting) {
+      setPrice(amountSetting?.setting?.value || ""); // Populate initial price
     }
+  }, [error, amountSetting]);
+
+  // Handle save/update
+  const handleSave = () => {
+    if (!price || Number(price) < 0) {
+      toast.error("Price must be a valid positive number.");
+      return;
+    }
+
+    updateRecordsAmount(
+      { value: String(price) },
+      {
+        onSuccess: () => {
+          toast.success("Canteen pricing updated successfully.");
+          setIsEditing(false); // Exit edit mode
+        },
+        onError: () => {
+          toast.error("Failed to update canteen pricing.");
+        },
+      }
+    );
+  };
+
+  // Handle create if price doesn't exist
+  const handleCreate = () => {
+    if (!price || Number(price) < 0) {
+      toast.error("Price must be a valid positive number.");
+      return;
+    }
+
+    createRecordsAmount(
+      { value: String(price) },
+      {
+        onSuccess: () => {
+          toast.success("Canteen pricing created successfully.");
+          setIsEditing(false); // Exit edit mode
+        },
+        onError: () => {
+          toast.error("Failed to create canteen pricing.");
+        },
+      }
+    );
   };
 
   return (
@@ -71,46 +109,62 @@ export default function Canteen() {
             <Switch id="daily-menu" />
           </div>
           <Separator />
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex-1 space-y-1">
-                <Label htmlFor="canteen-price">Canteen Pricing</Label>
-                <p className="text-sm text-muted-foreground">
-                  Change the pricing of the canteen items.
-                </p>
-              </div>
-              {isLoading ? (
-                <div>
-                  <Skeleton className="h-8 w-56 bg-muted/50" />
-                </div>
-              ) : (
-                <>
+          <div className="flex items-center justify-between space-x-4">
+            <div className="flex-1 space-y-1">
+              <Label htmlFor="canteen-price">Canteen Pricing</Label>
+              <p className="text-sm text-muted-foreground">
+                Change the pricing of the canteen items.
+              </p>
+            </div>
+            {isLoading ? (
+              <Skeleton className="h-8 w-56 bg-muted/50" />
+            ) : (
+              <div className="flex items-center w-56 text-right">
+                {!isEditing ? (
+                  <span className="text-lg font-medium text-primary">
+                    Ghc{price || "Not Set"}
+                  </span>
+                ) : (
                   <Input
                     id="canteen-price"
                     type="number"
-                    defaultValue={amountSetting?.setting?.value}
-                    {...register("value")}
-                    className="w-56 text-right"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full"
                     min="0"
                   />
-                  {errors.value && (
-                    <p className="text-red-500 text-sm">
-                      {typeof errors.value?.message === "string" && (
-                        <p className="text-red-500 text-sm">
-                          {errors.value.message}
-                        </p>
-                      )}
-                    </p>
-                  )}
-                </>
-              )}
-            </div>
-            <div className="flex justify-end">
-              <Button type="submit" disabled={updatingPriceLoader}>
-                {updatingPriceLoader ? "Saving..." : "Save Changes"}
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex justify-end space-x-4">
+            {!isEditing ? (
+              <Button
+                onClick={() => setIsEditing(true)}
+                disabled={creatingPriceLoader || updatingPriceLoader}
+              >
+                Edit
               </Button>
-            </div>
-          </form>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsEditing(false)}
+                  disabled={creatingPriceLoader || updatingPriceLoader}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={amountSetting ? handleSave : handleCreate}
+                  disabled={creatingPriceLoader || updatingPriceLoader}
+                >
+                  {creatingPriceLoader || updatingPriceLoader
+                    ? "Saving..."
+                    : "Save"}
+                </Button>
+              </>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>

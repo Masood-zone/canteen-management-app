@@ -51,12 +51,14 @@ type Student = {
   hasPaid?: boolean;
   amount?: number;
   settingsAmount?: number;
+  paidBy?: number;
+  class?: string;
 };
 
 type RecordsAmount = {
-  id: number;
-  name: string;
-  value: string;
+  id?: number;
+  name?: string;
+  value?: string;
 };
 
 type Teacher = {
@@ -143,24 +145,55 @@ interface TeacherRecord {
   totalAmount: number;
 }
 
+interface TeacherRecord {
+  classId: number;
+  date: string;
+  unpaidStudents?: Array<{
+    id: number;
+    amount: number;
+    paidBy: string;
+    hasPaid: boolean;
+    date: string;
+  }>;
+  paidStudents?: Array<{
+    id: number;
+    amount: number;
+    paidBy: string;
+    hasPaid: boolean;
+    date: string;
+  }>;
+  absentStudents?: Array<{
+    id: number;
+    amount_owing: number;
+    paidBy: string;
+    hasPaid: boolean;
+    date: string;
+  }>;
+  submittedBy: number;
+  teacher?: {
+    id: number;
+    name: string;
+  };
+}
+
 interface SubmitTeacherRecordPayload {
   classId: number;
   date: string;
-  unpaidStudents: Array<{
+  unpaidStudents?: Array<{
     id: number;
     amount: number;
     paidBy: string;
     hasPaid: boolean;
     date: string;
   }>;
-  paidStudents: Array<{
+  paidStudents?: Array<{
     id: number;
     amount: number;
     paidBy: string;
     hasPaid: boolean;
     date: string;
   }>;
-  absentStudents: Array<{
+  absentStudents?: Array<{
     id: number;
     amount_owing: number;
     paidBy: string;

@@ -342,8 +342,19 @@ export const getTeacherSubmittedRecords = async (
     throw error;
   }
 };
+export const getTeacherRecords = async (dateFormat: string) => {
+  try {
+    const response = await apiClient.get(
+      `/records/teachers?date=${dateFormat}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teacher records:", error);
+    throw error;
+  }
+};
 
-//Mutation
+//Mutation: Get students records by class and date
 export const getStudentRecordsByClassAndDate = async (
   classId: number,
   date: string
@@ -398,6 +409,17 @@ export const getPresetAmount = async () => {
   }
 };
 
+/**
+ *  Create settings amount */
+export const createRecordsAmount = async (data: RecordsAmount) => {
+  try {
+    const response = await apiClient.post("/settings/amount", data);
+    return response.data;
+  } catch (error) {
+    console.log("Error creating preset amount");
+    throw error;
+  }
+};
 /**
  *  Update settings amount */
 export const updateRecordsAmount = async (data: RecordsAmount) => {

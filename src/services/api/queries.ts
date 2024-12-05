@@ -34,6 +34,8 @@ import {
   updateReference,
   fetchReference,
   fetchRecords,
+  createRecordsAmount,
+  getTeacherRecords,
 } from "@/services/api";
 import { apiClient } from "../root";
 import { useNavigate } from "react-router-dom";
@@ -333,33 +335,13 @@ export const useUpdateTeacher = () => {
 };
 
 /*
- * Query: Fetch teacher records summary
- */
-export const useFetchTeacherRecordsSummary = (date: Date) => {
-  return useQuery(
-    ["teacherRecordsSummary", date],
-    async () => {
-      const response = await apiClient.get("/teachers/summary", {
-        params: { date: date.toISOString() },
-      });
-      return response.data;
-    },
-    {
-      onError: (error) => {
-        console.error(error);
-        // Handle error (e.g., show a toast notification)
-      },
-    }
-  );
-};
-/*
  * Query: Fetch a teacher record detail
  */
-export const useFetchTeacherRecordsDetail = (teacherId: number, date: Date) => {
+export const useFetchTeacherRecordsDetail = (date: Date) => {
   return useQuery(
-    ["teacherRecordsDetail", teacherId, date],
+    ["teacherRecordsDetail", date],
     async () => {
-      const response = await apiClient.get(`/teachers/${teacherId}/detail`, {
+      const response = await apiClient.get(`/records/teachers`, {
         params: {
           date: date.toISOString(),
         },
@@ -481,7 +463,23 @@ export const useFetchRecordsByClassAndDate = (
 };
 
 /**
- * Mutation: Update settins amount.
+ * Mutation: Create settings amount.
+ */
+export const useCreateRecordsAmount = () => {
+  const queryClient = useQueryClient();
+  return useMutation((data: RecordsAmount) => createRecordsAmount(data), {
+    onSuccess: () => {
+      toast.success("Preset amount created successfully!");
+      queryClient.invalidateQueries(["records"]);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to create preset amount.");
+    },
+  });
+};
+/**
+ * Mutation: Update settings amount.
  */
 export const useUpdateRecordsAmount = () => {
   const queryClient = useQueryClient();
@@ -523,6 +521,7 @@ export const useSubmitTeacherRecord = () => {
   return useMutation(submitTeacherRecord, {
     onSuccess: () => {
       queryClient.invalidateQueries(["studentRecords"]);
+      queryClient.invalidateQueries(["teacherRecords"]);
       toast.success("Records submitted successfully.");
     },
     onError: (error) => {
@@ -548,6 +547,15 @@ export const useTeacherSubmittedRecords = (teacherId: number, date: string) => {
     }
   );
 };
+export const useTeacherRecords = (date: string) => {
+  return useQuery(["teacherRecords", date], () => getTeacherRecords(date), {
+    enabled: !!date,
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to fetch submitted records.");
+    },
+  });
+};
 
 /**
  * Mutation: Update a student status.
@@ -559,6 +567,7 @@ export const useUpdateStudentStatus = () => {
     onSuccess: () => {
       toast.success("Record submitted successfully!");
       queryClient.invalidateQueries(["studentRecords"]);
+      queryClient.invalidateQueries(["teacherRecords"]);
     },
     onError: (error) => {
       console.error(error);

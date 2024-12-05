@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import {
   useFetchClasses,
   useStudentRecordsByClassAndDate,
   useUpdateStudentStatus,
+  useSubmitTeacherRecord,
 } from "@/services/api/queries";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -29,25 +30,41 @@ import { columns } from "./columns";
 export default function SetupCanteen() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedClassId, setSelectedClassId] = useState<string>("");
-  const formattedDate = selectedDate.toISOString().split("T")[0];
 
+  const [records, setRecords] = useState<CanteenRecord[]>([]);
+  const formattedDate = selectedDate.toISOString().split("T")[0];
   const { data: classes, isLoading: classesLoading } = useFetchClasses();
   const { data: studentRecords, isLoading: recordsLoading } =
     useStudentRecordsByClassAndDate(parseInt(selectedClassId), formattedDate);
   const { mutate: updateStatus, isLoading: updatingLoader } =
     useUpdateStudentStatus();
-  const classSupervisorId = classes?.supervisorId;
+  const { mutate: submitRecord, isLoading: submittingRecord } =
+    useSubmitTeacherRecord();
+  const classSupervisorId = classes?.find(
+    (classItem: Class) => classItem.id === parseInt(selectedClassId)
+  )?.supervisorId;
+
+  useEffect(() => {
+    if (studentRecords) {
+      setRecords(studentRecords);
+    }
+  }, [studentRecords]);
+
   const handleUpdateStatus = async (
     record: CanteenRecord,
     newStatus: { hasPaid: boolean; isAbsent: boolean }
   ) => {
     try {
-      await updateStatus({
+      const updatedRecord = {
         ...record,
         ...newStatus,
         submitedBy: classSupervisorId ?? 0,
         date: selectedDate?.toISOString().split("T")[0] ?? "",
-      });
+      };
+      await updateStatus(updatedRecord);
+      setRecords((prevRecords) =>
+        prevRecords.map((r) => (r.id === record.id ? updatedRecord : r))
+      );
       toast.success("Student status updated successfully");
     } catch (error) {
       console.error(error);
@@ -55,12 +72,69 @@ export default function SetupCanteen() {
     }
   };
 
+  const handleSubmitCanteen = async () => {
+    if (!selectedClassId) {
+      toast.error("Please select a class before submitting");
+      return;
+    }
+
+    const payload = {
+      classId: parseInt(selectedClassId),
+      date: formattedDate,
+      unpaidStudents: records
+        .filter((r) => !r.hasPaid && !r.isAbsent)
+        .map((r) => ({
+          id: r.id,
+          amount: r.settingsAmount,
+          paidBy: r.payedBy?.toString() || "",
+          hasPaid: false,
+          date: formattedDate,
+        })),
+      paidStudents: records
+        .filter((r) => r.hasPaid)
+        .map((r) => ({
+          id: r.id,
+          amount: r.settingsAmount,
+          paidBy: r.payedBy?.toString() || "",
+          hasPaid: true,
+          date: formattedDate,
+        })),
+      absentStudents: records
+        .filter((r) => r.isAbsent)
+        .map((r) => ({
+          id: r.id,
+          amount_owing: r.settingsAmount,
+          paidBy: r.payedBy?.toString() || "",
+          hasPaid: false,
+          date: formattedDate,
+        })),
+      submittedBy: classSupervisorId,
+    };
+
+    try {
+      await submitRecord(payload);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to submit canteen records");
+    }
+  };
+
   return (
     <section className="container mx-auto py-10 px-5">
-      <h1 className="text-3xl font-bold mb-6">Admin Canteen Setup</h1>
-      <p className="text-muted-foreground mb-6">
-        Setup canteen records for students in a class
-      </p>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold">Admin Canteen Setup</h1>
+          <p className="text-muted-foreground">
+            Setup canteen records for students in a class
+          </p>
+        </div>
+        <Button
+          onClick={handleSubmitCanteen}
+          disabled={!selectedClassId || submittingRecord}
+        >
+          {submittingRecord ? "Submitting..." : "Submit Canteen Records"}
+        </Button>
+      </div>
       <div className="flex items-center space-x-4 mb-6">
         <Select onValueChange={setSelectedClassId} value={selectedClassId}>
           <SelectTrigger className="w-[200px]">
@@ -106,8 +180,7 @@ export default function SetupCanteen() {
       ) : (
         <CanteenTable
           columns={columns(handleUpdateStatus, updatingLoader)}
-          data={studentRecords || []}
-          // searchField="amount"
+          data={records}
         />
       )}
     </section>
