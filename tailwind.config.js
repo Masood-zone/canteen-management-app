@@ -23,28 +23,28 @@ export default {
           foreground: "hsl(var(--popover-foreground))",
         },
         primary: {
-          DEFAULT: "hsl(var(--primary))", // Red #F05050
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "hsl(var(--primary))", // Deep green
+          foreground: "hsl(var(--primary-foreground))", // White
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))", // Blue #23B7E5
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "hsl(var(--secondary))", // Very light green
+          foreground: "hsl(var(--secondary-foreground))", // Black
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "hsl(var(--muted))", // Light gray
+          foreground: "hsl(var(--muted-foreground))", // Medium gray
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))", // Orange #F0AD4E
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "hsl(var(--accent))", // Soft gray
+          foreground: "hsl(var(--accent-foreground))", // Black
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))", // Red #F05050
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "hsl(var(--destructive))", // Red
+          foreground: "hsl(var(--destructive-foreground))", // White
         },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        border: "hsl(var(--border))", // Light gray borders
+        input: "hsl(var(--input))", // Very light gray inputs
+        ring: "hsl(var(--ring))", // Green ring highlights
       },
       fontFamily: {
         sans: ["Noto Sans", "sans-serif"],
