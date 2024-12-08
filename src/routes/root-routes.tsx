@@ -44,6 +44,16 @@ const rootRoutes = createBrowserRouter(
             return { Component: ForgotPassword };
           }}
         />
+        {/* Verify OTP */}
+        <Route
+          path="verify-otp"
+          lazy={async () => {
+            const { default: VerifyOTP } = await import(
+              "@/pages/auth/verify-otp.tsx"
+            );
+            return { Component: VerifyOTP };
+          }}
+        />
         {/* Reset Password*/}
         <Route
           path="reset-password"

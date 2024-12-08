@@ -36,7 +36,7 @@ export default function Canteen() {
       toast.error("Failed to fetch records amount.");
     }
     if (amountSetting) {
-      setPrice(amountSetting?.setting?.value || ""); // Populate initial price
+      setPrice(amountSetting?.data?.value || ""); // Populate initial price
     }
   }, [error, amountSetting]);
 

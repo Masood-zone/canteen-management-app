@@ -1,19 +1,9 @@
-// Test types
+// Real-time types
 interface LoginFormProps {
   email: string;
   password: string;
 }
 
-interface ForgotPasswordFormProps {
-  email: string;
-}
-
-interface ResetPasswordFormProps {
-  password: string;
-  confirmPassword: string;
-}
-
-// Real-time types
 interface User {
   token: string;
   user: {
@@ -217,3 +207,16 @@ type Reference = {
   name?: string;
   description?: string;
 };
+
+interface ForgotPasswordFormProps {
+  email: string;
+}
+
+interface VerifyOTPFormProps {
+  otp: string;
+}
+
+interface ResetPasswordFormProps {
+  password: string;
+  confirmPassword: string;
+}
